@@ -16,6 +16,7 @@
   --line-soft: rgb(255 255 255 / 0.05); /* Filets discrets */
   --field-border: #76736e; /* Contour de champ (≥ 3 : 1 sur les surfaces) */
   --panel: rgb(22 22 22 / 0.84); /* Surface à peine transparente : le studio s'atténue derrière */
+  --scrim: rgb(0 0 0 / 0.55); /* Voile derrière un panneau ou un tiroir */
 
   /* Couleurs · lumière studio : uniquement en lumière (halos, reflets, rendus, graphiques), jamais en aplat sur un composant */
   --key: 255 226 190; /* Lumière principale, chaude — triplet RVB : rgb(var(--key) / 0.13) */

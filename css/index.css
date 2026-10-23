@@ -1,0 +1,5 @@
+/* Tout le design system sauf la police : importer aussi fonts.css quand un bundler est là. */
+@import "./tokens.css";
+@import "./base.css";
+@import "./studio.css";
+@import "./components.css";

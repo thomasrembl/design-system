@@ -1,0 +1,204 @@
+/* Composants, repris du portfolio et de Compta et reliés aux tokens. Exemples HTML : demo/index.html. */
+
+/* ---------- Bouton ---------- */
+/* <a class="btn btn--light">Me contacter</a> · une seule action --light (ou --primary) par écran */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: var(--button-height); padding: 0 20px; border-radius: var(--radius);
+  font-size: var(--step-small); font-weight: var(--w-strong); letter-spacing: 0.005em; white-space: nowrap;
+  transition: transform var(--dur-button) var(--ease), background-color var(--dur-button) var(--ease), color var(--dur-button) var(--ease);
+}
+.btn:active { transform: scale(0.97); }
+.btn svg { width: 16px; height: 16px; flex: none; }
+.btn--light, .btn--primary { background: var(--accent); color: var(--on-accent); }
+.btn--light:hover, .btn--primary:hover { background: var(--accent-hover); }
+.btn--quiet { background: var(--surface-2); color: var(--ink); }
+.btn--quiet:hover { background: var(--surface-3); }
+.btn--ghost { color: var(--muted); padding: 0 12px; }
+.btn--ghost:hover { color: var(--ink); background: color-mix(in srgb, var(--ink) 4%, transparent); }
+.btn--small { min-height: var(--button-height-sm); padding: 0 14px; }
+.btn--block { width: 100%; }
+.btn[disabled], .btn[aria-disabled="true"] { opacity: 0.55; pointer-events: none; }
+
+/* <button class="icon-button" aria-label="Fermer">…svg…</button> */
+.icon-button {
+  display: grid; place-items: center; width: var(--button-height); height: var(--button-height);
+  border-radius: var(--radius); color: var(--muted);
+  transition: color var(--dur-color), background-color var(--dur-color);
+}
+.icon-button svg { width: 18px; height: 18px; }
+.icon-button:hover:not(:disabled) { color: var(--ink); background: color-mix(in srgb, var(--ink) 5%, transparent); }
+.icon-button:disabled { opacity: 0.3; cursor: default; }
+
+/* ---------- Champ ---------- */
+/* <label class="field"><span class="field__label">Adresse e-mail</span><input class="field__control" type="email">
+   <span class="field__hint">Je réponds sous 48 heures.</span></label> · erreur : aria-invalid="true" + .field__error */
+.field { display: grid; gap: 6px; align-content: start; }
+.field__label { font-size: var(--step-small); color: var(--muted); }
+.field__control {
+  width: 100%; min-height: var(--field-height); padding: 12px 14px; border-radius: var(--radius);
+  background: var(--surface-2); border: 1px solid var(--field-border); color: var(--ink);
+  font-size: 1rem; /* 16 px : iOS ne zoome pas sur le champ */
+  transition: border-color var(--dur-color), background-color var(--dur-color);
+}
+textarea.field__control { min-height: 112px; resize: vertical; }
+select.field__control {
+  appearance: none; padding-right: 40px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%238f8c87' stroke-width='1.6'/></svg>");
+  background-repeat: no-repeat; background-position: right 14px center;
+}
+.field__control::placeholder { color: var(--muted); opacity: 1; }
+.field__control:hover { background-color: var(--field-hover); }
+.field__control:focus { outline: none; border-color: var(--ink); }
+.field__control:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.field__control[aria-invalid="true"], .field__control:user-invalid { border-color: var(--error); }
+.field__hint { font-size: var(--step-small); color: var(--muted); }
+.field__error { font-size: var(--step-small); color: var(--error); }
+.field--money .field__control { font-variant-numeric: tabular-nums; }
+
+/* <label class="check__label"><input class="check__box" type="checkbox"> Libellé</label> */
+.check { display: grid; gap: 4px; }
+.check__label { font-size: var(--step-ui); display: inline-flex; align-items: center; gap: 12px; width: fit-content; min-height: var(--button-height); cursor: pointer; }
+.check__box { flex: none; width: 22px; height: 22px; margin: 0; accent-color: var(--ink); cursor: pointer; }
+.check__box:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+.check .field__hint, .check .field__error { padding-left: 34px; }
+
+/* ---------- Carte projet (vitrine) ---------- */
+/* <a class="card" href="…"><div class="card__media"><img …></div><div class="card__meta">
+   <span class="card__title">Flacon Aurore</span><span class="card__kind">Packshot · 2026</span></div></a>
+   Aucun texte posé sur l'image. */
+.card { display: block; position: relative; }
+.card__media { position: relative; aspect-ratio: 1; overflow: hidden; border-radius: var(--radius); background: var(--surface); }
+.card__media img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--dur-zoom) var(--ease), filter var(--dur-zoom) var(--ease); }
+.card:hover .card__media img { transform: scale(1.035); filter: brightness(1.12); }
+.card__media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.5s var(--ease); pointer-events: none; }
+.card.is-playing .card__media video { opacity: 1; }
+.card__meta { display: flex; justify-content: space-between; gap: 12px; margin-top: 12px; font-size: var(--step-ui); line-height: 1.45; }
+.card__title { color: var(--ink); font-weight: var(--w-strong); }
+.card__kind, .card__year { color: var(--muted); }
+
+/* Grille vitrine : 3 colonnes dès 1 280 px, 2 de 640 à 1 279 px, 1 en dessous. */
+.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px var(--gap); }
+@media (max-width: 1279px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 639px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- Badge (outil) ---------- */
+/* <span class="badge badge--rouge"><span class="badge__dot"></span>En retard</span> · toujours un mot */
+.badge {
+  display: inline-flex; align-items: center; gap: 7px; min-height: 24px; padding: 0 9px 0 8px; border-radius: var(--radius-pill);
+  border: 1px solid var(--line); font-size: 0.8125rem; line-height: 1; white-space: nowrap; color: var(--ink);
+}
+.badge__dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex: none; }
+.badge--ok { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 35%, transparent); }
+.badge--ambre { color: var(--amber); border-color: color-mix(in srgb, var(--amber) 40%, transparent); }
+.badge--rouge { color: var(--red); border-color: color-mix(in srgb, var(--red) 45%, transparent); }
+.badge--neutre .badge__dot { background: var(--ink); }
+.badge--muet { color: var(--muted); }
+
+/* ---------- Notice ---------- */
+/* <div class="notice notice--ambre" role="status"><p class="notice__title">Facture en attente</p>
+   <div class="notice__body"><p>Échéance dans 3 jours.</p></div></div> */
+.notice { display: grid; gap: 10px; padding: 14px 18px 14px 20px; background: var(--panel); border: 1px solid var(--line); border-left-width: 3px; border-radius: var(--radius); }
+.notice__title { font-weight: var(--w-strong); line-height: 1.35; }
+.notice__body { display: grid; gap: 12px; max-width: 70ch; color: var(--muted); font-size: var(--step-small); line-height: 1.5; }
+.notice__form { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.notice--ambre { border-color: color-mix(in srgb, var(--amber) 40%, transparent); border-left-color: var(--amber); }
+.notice--ambre .notice__title { color: var(--amber); }
+.notice--ok { border-left-color: var(--ok); }
+.notice--ok .notice__title { color: var(--ok); }
+.notice--erreur { border-color: color-mix(in srgb, var(--error) 40%, transparent); border-left-color: var(--error); }
+.notice--erreur .notice__title { color: var(--error); }
+
+/* ---------- KPI et jauges (outil) ---------- */
+/* <dl class="kpis"><div class="kpi kpi--ambre"><dt class="kpi__label">Cotisations</dt><dd class="kpi__value num">4 020 €</dd></div></dl> */
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); margin: 0; }
+.kpi { display: grid; align-content: start; gap: 6px; padding: 18px 20px 20px; min-width: 0; }
+.kpi + .kpi { border-left: 1px solid var(--line-soft); }
+.kpi__label { display: flex; align-items: center; gap: 8px; font-size: var(--step-small); color: var(--muted); line-height: 1.35; }
+.kpi__value { margin: 0; font-size: var(--step-kpi); font-weight: var(--w-light); letter-spacing: -0.02em; line-height: 1.15; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.kpi__hint { margin: 0; font-size: var(--step-small); color: var(--muted); line-height: 1.35; }
+.kpi--ambre .kpi__value { color: var(--amber); }
+.kpi--rouge .kpi__value { color: var(--red); }
+.kpi--ambre .kpi__label::before, .kpi--rouge .kpi__label::before { content: ""; flex: none; width: 6px; height: 6px; border-radius: 50%; background: var(--amber); }
+.kpi--rouge .kpi__label::before { background: var(--red); }
+
+.gauges { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.gauge { display: grid; align-content: start; gap: 12px; padding: 20px 22px 22px; min-width: 0; }
+.gauge + .gauge { border-left: 1px solid var(--line-soft); }
+.gauge__head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.gauge__label { font-weight: var(--w-strong); }
+.gauge__value { color: var(--ink); font-size: var(--step-small); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.gauge__track { position: relative; height: 4px; border-radius: 2px; background: color-mix(in srgb, var(--ink) 9%, transparent); overflow: hidden; }
+.gauge__fill { position: absolute; inset: 0 auto 0 0; border-radius: 2px; background: var(--chart-chaud); }
+.gauge--ambre .gauge__fill { background: var(--amber); }
+.gauge--rouge .gauge__fill { background: var(--red); }
+.gauge__detail { font-size: var(--step-small); color: var(--muted); }
+.gauge__message { font-size: var(--step-small); line-height: 1.5; color: var(--ink); max-width: 46ch; }
+.gauge--ambre .gauge__message { color: var(--amber); }
+.gauge--rouge .gauge__message { color: var(--red); }
+
+/* ---------- Sidebar et navigation ---------- */
+/* <aside class="sidebar no-scrollbar"><nav class="nav"><a href="…" aria-current="page">Packshot</a>…</nav></aside>
+   Largeur : var(--sidebar) — 304 px vitrine, 272 px avec data-contexte="outil". */
+.sidebar {
+  position: fixed; inset: 0 auto 0 0; width: var(--sidebar); z-index: 20;
+  display: flex; flex-direction: column; padding: 36px 28px 24px 32px; overflow-y: auto;
+}
+.nav { margin-top: 36px; flex: 1; display: grid; align-content: start; gap: 22px; }
+.nav__group { display: grid; }
+.nav a {
+  display: flex; width: fit-content; align-items: baseline; gap: 6px; padding: 4px 0; line-height: 1.3;
+  font-size: 0.9375rem; font-weight: var(--w-text); color: var(--muted);
+  transition: color var(--dur-button) var(--ease), transform var(--dur-menu) var(--ease);
+}
+.nav a:hover { color: var(--ink); transform: translateX(3px); }
+.nav a[aria-current="page"], .nav a[aria-current="true"] { color: var(--ink); }
+/* Un fin trait devant la page en cours : la couleur seule ne suffit pas à la distinguer. */
+.nav a[aria-current="page"]::before, .nav a[aria-current="true"]::before { content: ""; align-self: center; width: 10px; height: 1px; background: var(--ink); }
+.nav sup { font-size: 0.68em; position: relative; top: -0.45em; line-height: 0; opacity: 0.8; }
+
+/* ---------- Tableau (outil) ---------- */
+/* <div class="table"><table>…</table></div> · montants : class="is-right num" */
+.table {
+  position: relative; overflow: auto; max-height: min(72svh, 680px); overscroll-behavior-x: contain;
+  background: var(--surface); border-radius: inherit;
+  scrollbar-width: thin; scrollbar-color: var(--surface-3) transparent;
+}
+.table table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.9375rem; }
+.table th, .table td { padding: 11px 16px; text-align: left; white-space: nowrap; border-bottom: 1px solid var(--line-soft); }
+.table thead th {
+  position: sticky; top: 0; z-index: 2; background: var(--surface);
+  font-size: var(--step-small); font-weight: var(--w-text); color: var(--muted); padding-top: 13px; padding-bottom: 11px;
+  border-bottom-color: var(--line);
+}
+.table tbody th { font-weight: var(--w-text); }
+.table th[scope="row"] { position: sticky; left: 0; z-index: 1; background: var(--surface); }
+.table thead th:first-child { left: 0; z-index: 3; }
+.table .is-right { text-align: right; }
+.table td.is-zero { color: var(--muted); }
+.table tbody tr:last-child > * { border-bottom: 0; }
+.table tfoot th, .table tfoot td { position: sticky; bottom: 0; background: var(--surface); font-weight: var(--w-strong); border-bottom: 0; border-top: 1px solid var(--line); }
+.table tfoot th { z-index: 3; }
+.table__link { text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
+.table__link:hover { text-decoration-color: currentColor; }
+
+/* ---------- Tiroir / panneau latéral ---------- */
+/* <dialog class="drawer"><div class="drawer__inner"><div class="drawer__head"><h2 class="drawer__title">Un produit à montrer ?</h2>
+   <button class="drawer__close" aria-label="Fermer">…svg…</button></div>…</div></dialog> · ouvrir avec dialog.showModal() */
+.drawer {
+  position: fixed; inset: 0 0 0 auto; z-index: 50; margin: 0; width: min(var(--panel-width), 100%); height: 100%; max-width: 100%; max-height: none;
+  padding: 0; border: 0; overflow-y: auto; overscroll-behavior: contain;
+  background: var(--surface); color: var(--ink); box-shadow: var(--shadow-panel);
+}
+.drawer::backdrop { background: var(--scrim); }
+.drawer[open] { animation: drawer-in var(--dur-panel) var(--ease); }
+@keyframes drawer-in { from { transform: translateX(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+.drawer__inner { display: grid; gap: 28px; padding: 28px clamp(20px, 3vw, 36px) 40px; }
+.drawer__head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.drawer__title { font-size: var(--step-title); font-weight: var(--w-light); letter-spacing: -0.03em; line-height: 1.05; padding-top: 6px; }
+.drawer__close {
+  flex: none; width: var(--button-height); height: var(--button-height); border-radius: var(--radius); display: grid; place-items: center;
+  background: var(--surface-2); transition: background-color var(--dur-color), transform var(--dur-button) var(--ease);
+}
+.drawer__close:hover { background: var(--surface-3); transform: rotate(90deg); }
+.drawer__close svg { width: 18px; height: 18px; }

@@ -1,0 +1,55 @@
+/* Base : reset, typographie, focus, sélection, contextes, styles de texte, mouvement réduit, utilitaires. */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; color-scheme: dark; scrollbar-width: none; }
+html::-webkit-scrollbar, .no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: var(--step-body);
+  font-weight: var(--w-text);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; background: none; border: 0; padding: 0; }
+h1, h2, h3, p, dl, dd, ul, ol, figure { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 2px; }
+::selection { background: var(--ink); color: var(--bg); }
+[hidden] { display: none !important; } /* l'attribut l'emporte sur tout `display` de composant */
+
+/* Contextes : la vitrine par défaut ; l'outil (Compta) resserre la sidebar. Le papier sert aux documents imprimés. */
+[data-contexte="outil"] { --sidebar: var(--sidebar-tool); }
+.papier {
+  --bg: var(--paper); --surface: var(--paper-surface); --ink: var(--paper-ink); --muted: var(--paper-muted);
+  --line: var(--paper-line); --accent: var(--paper-ink); --on-accent: var(--paper); --focus: var(--paper-ink);
+  color-scheme: light; background: var(--bg); color: var(--ink);
+}
+
+/* Styles de texte : les mêmes que les styles Figma (Display, Titre, Accroche, Corps, Interface, Bouton, Petit, Chiffre clé). */
+.t-display { font-size: var(--step-head); font-weight: var(--w-light); line-height: 1; letter-spacing: -0.035em; }
+.t-titre { font-size: var(--step-title); font-weight: var(--w-light); line-height: 1.05; letter-spacing: -0.03em; }
+.t-accroche { font-size: var(--step-lead); font-weight: var(--w-light); line-height: 1.3; letter-spacing: -0.015em; }
+.t-corps { font-size: var(--step-body); font-weight: var(--w-text); line-height: 1.55; }
+.t-interface { font-size: var(--step-ui); font-weight: var(--w-text); line-height: 1.4; }
+.t-bouton { font-size: var(--step-ui); font-weight: var(--w-strong); line-height: 1; letter-spacing: 0.005em; }
+.t-petit { font-size: var(--step-small); font-weight: var(--w-text); line-height: 1.45; }
+.t-chiffre { font-size: var(--step-kpi); font-weight: var(--w-light); line-height: 1.1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.t-muted { color: var(--muted); }
+.colonne { max-width: var(--column); }
+
+/* Utilitaires */
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.skip { position: fixed; left: 16px; top: -60px; z-index: 100; background: var(--accent); color: var(--on-accent); padding: 10px 16px; border-radius: var(--radius); }
+.skip:focus { top: 16px; }
+.num { font-variant-numeric: tabular-nums; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
