@@ -40,7 +40,7 @@ jobs:
       PAQUET: '@thomasremblier/design-system'
       DEPOT: thomasrembl/design-system
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ inputs.base }}
           fetch-depth: 0
@@ -58,7 +58,7 @@ jobs:
           echo "Version installée : ${ACTUELLE:-aucune} · dernière publiée : ${DERNIERE:-aucune}"
           if [ -z "$DERNIERE" ] || [ "$ACTUELLE" = "$DERNIERE" ]; then echo "a_faire=non" >> "$GITHUB_OUTPUT"; else echo "a_faire=oui" >> "$GITHUB_OUTPUT"; fi
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         if: steps.check.outputs.a_faire == 'oui'
         with:
           node-version: ${{ inputs.node-version }}

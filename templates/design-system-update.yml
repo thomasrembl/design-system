@@ -10,6 +10,8 @@ on:
   workflow_dispatch:
 jobs:
   maj:
+    # @main suit le workflow partagé sans rien faire. Dépôt sensible (production, données) : épingler sur
+    # le SHA d'une version (ex. @2962e032c9f7ef02c11746e73b014bdf0219ada2 # v0.1.1) et le mettre à jour à la main.
     uses: thomasrembl/design-system/.github/workflows/update-site.yml@main
     permissions:
       contents: write
