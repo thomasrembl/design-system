@@ -1,0 +1,22 @@
+# À copier dans le site : .github/workflows/design-system.yml
+# Vérifie chaque heure si une nouvelle version du design system est publiée ; si oui, met le paquet à jour,
+# vérifie le site et fusionne (ou laisse une PR à valider si auto-merge vaut false).
+# Prérequis du dépôt : Settings › Actions › General › Workflow permissions › cocher
+# « Allow GitHub Actions to create and approve pull requests ».
+name: Design system
+on:
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+jobs:
+  maj:
+    uses: thomasrembl/design-system/.github/workflows/update-site.yml@main
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: write
+    with:
+      verify: npm ci && npm run build && npm test
+      auto-merge: true
+      sync-branch: dev
+      # after-merge-workflow: ci.yml   # si le déploiement part d'un workflow lancé sur main

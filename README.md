@@ -33,6 +33,13 @@ Une fois par ordinateur :
 
 Ensuite, pour tout site, page, composant, visuel ou texte de la marque, Claude charge le skill `marque-thomas-remblier` : plateforme et ton de voix, charte, règles web, composants et installation de ce paquet. `/plugin update marque` récupère les nouvelles versions.
 
+## Mise à jour automatique des sites
+1. **Publication** : à chaque fusion sur `main`, `.github/workflows/release.yml` lance les tests et, si le numéro de `package.json` est nouveau, crée l'étiquette `vX.Y.Z` et sa release. Publier une version = augmenter la version (paquet, `plugin.json`, `marketplace.json`) dans la PR.
+2. **Sites** : chaque site déclare `"@thomasremblier/design-system": "github:thomasrembl/design-system#semver:0.x"` et copie [`templates/design-system-update.yml`](templates/design-system-update.yml) dans `.github/workflows/`. Chaque heure, le workflow partagé `update-site.yml` regarde s'il y a une version plus récente ; si oui, il met le paquet à jour (sans exécuter de script d'installation, seuls `package.json` et `package-lock.json` changent), lance la commande `verify` du site, ouvre une PR et la fusionne si la vérification passe (`auto-merge: false` pour garder une validation). En cas d'échec, la PR reste ouverte et le run est rouge.
+   - Prérequis par dépôt : Settings › Actions › General › cocher « Allow GitHub Actions to create and approve pull requests ».
+   - Une fusion faite par une action ne déclenche pas les autres workflows : si le déploiement part d'un workflow lancé sur `main`, le nommer dans `after-merge-workflow` (et lui ajouter `workflow_dispatch`).
+3. **Plugin Claude** : activer une fois par ordinateur la mise à jour automatique de la marketplace (`/plugin` › Marketplaces › thomasremblier › mise à jour automatique), ou lancer `/plugin update marque`.
+
 ## Faire évoluer le design system
 1. Modifier `tokens/tokens.json` (jamais `css/tokens.css`), puis `npm run build`.
 2. Composants : `css/components.css`, uniquement avec des variables.
