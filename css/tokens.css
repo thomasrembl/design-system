@@ -1,0 +1,92 @@
+/* Généré par scripts/build.mjs depuis tokens/tokens.json — ne pas modifier à la main. */
+:root {
+  /* Couleurs · thème sombre « studio » */
+  --bg: #0f0f0f; /* Noir studio : fond */
+  --surface: #161616; /* Vignettes, panneaux, tableaux */
+  --surface-2: #1e1e1e; /* Champs, boutons discrets, état actif */
+  --surface-3: #262626; /* Survols */
+  --field-hover: #232323; /* Champ survolé */
+  --ink: #edebe7; /* Encre : texte, titres */
+  --muted: #8f8c87; /* Gris : texte secondaire, labels */
+  --accent: #f3f3f2; /* Blanc cassé : une seule action principale par écran */
+  --accent-hover: #ffffff; /* Action principale survolée */
+  --on-accent: #0f0f0f; /* Texte sur l'action principale */
+  --focus: #f3f3f2; /* Contour de focus (2 px) */
+  --line: rgb(255 255 255 / 0.08); /* Filets (outil : tableaux, KPI) */
+  --line-soft: rgb(255 255 255 / 0.05); /* Filets discrets */
+  --field-border: #76736e; /* Contour de champ (≥ 3 : 1 sur les surfaces) */
+  --panel: rgb(22 22 22 / 0.84); /* Surface à peine transparente : le studio s'atténue derrière */
+  --scrim: rgb(0 0 0 / 0.55); /* Voile derrière un panneau ou un tiroir */
+
+  /* Couleurs · lumière studio : uniquement en lumière (halos, reflets, rendus, graphiques), jamais en aplat sur un composant */
+  --key: 255 226 190; /* Lumière principale, chaude — triplet RVB : rgb(var(--key) / 0.13) */
+  --rim: 196 214 255; /* Lumière de contour, froide — triplet RVB */
+  --chart-chaud: #ffe2be; /* Série principale des graphiques */
+  --chart-froid: #9fb6e6; /* Série secondaire des graphiques */
+  --chart-neutre: #8f8c87; /* Série neutre des graphiques */
+
+  /* Couleurs · états (outil uniquement, toujours accompagnés d'un mot) */
+  --amber: #d9a441; /* À surveiller, en attente */
+  --red: #e26d5c; /* En retard, erreur (état) */
+  --error: #ec9a90; /* Texte et contour d'erreur */
+  --ok: #8fb996; /* Fait, encaissé */
+
+  /* Couleurs · papier (devis, factures, documents imprimés) */
+  --paper: #f3f3f2; /* Fond papier */
+  --paper-surface: #ebe9e5; /* Encadrés sur papier */
+  --paper-ink: #0f0f0f; /* Texte sur papier */
+  --paper-muted: #6b6964; /* Mentions sur papier (4,9 : 1) */
+  --paper-line: rgb(15 15 15 / 0.12); /* Filets sur papier */
+
+  /* Typographie · Geist, trois graisses */
+  --font: "Geist Variable", system-ui, sans-serif;
+  --w-light: 300; /* Titres, accroches, chiffres clés */
+  --w-text: 350; /* Texte courant, interface */
+  --w-strong: 450; /* Boutons, titres de vignettes */
+  --step-small: clamp(0.8125rem, 0.79rem + 0.1vw, 0.875rem); /* Petit : 13 → 14 px */
+  --step-ui: 1rem; /* Interface : 16 px */
+  --step-body: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem); /* Corps : 17 → 19 px */
+  --step-lead: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem); /* Accroche : 20 → 26 px */
+  --step-kpi: clamp(1.25rem, 1.05rem + 0.55vw, 1.625rem); /* Chiffre clé : 20 → 26 px */
+  --step-title: clamp(1.75rem, 1.4rem + 1.4vw, 2.5rem); /* Titre : 28 → 40 px */
+  --step-head: clamp(2rem, 1.3rem + 3.2vw, 4rem); /* Display : 32 → 64 px */
+
+  /* Espacements · base 4 */
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-48: 48px;
+  --space-64: 64px;
+  --space-80: 80px;
+  --space-120: 120px;
+  --gutter: clamp(16px, 2.2vw, 32px); /* Marge latérale fluide */
+  --gap: 10px; /* Écart entre colonnes de la grille vitrine */
+
+  /* Rayons et ombre */
+  --radius: 6px; /* Rayon unique */
+  --radius-pill: 999px; /* Badges */
+  --shadow-panel: -30px 0 80px rgb(0 0 0 / 0.5); /* Seule ombre : panneaux flottants */
+
+  /* Largeurs et hauteurs */
+  --sidebar: 304px; /* Sidebar vitrine (272 px en contexte outil) */
+  --sidebar-tool: 272px; /* Sidebar outil */
+  --column: 560px; /* Colonne de texte (≈ 65 signes) */
+  --legal: 680px; /* Pages légales */
+  --page: 1240px; /* Page outil */
+  --panel-width: 540px; /* Panneau latéral */
+  --button-height: 44px; /* Bouton (cible tactile minimale) */
+  --button-height-sm: 36px; /* Petit bouton */
+  --field-height: 48px; /* Champ */
+
+  /* Mouvement · une seule courbe, coupée par prefers-reduced-motion */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1); /* Départ franc, arrivée très douce */
+  --dur-color: 200ms; /* Couleurs, survols */
+  --dur-button: 250ms; /* Boutons, navigation */
+  --dur-menu: 350ms; /* Menu */
+  --dur-panel: 500ms; /* Panneaux et tiroirs (450 → 550 ms) */
+  --dur-reveal: 900ms; /* Apparitions : fondu + 22 px */
+  --dur-zoom: 1200ms; /* Zoom de vignette (× 1,035) */
+}
