@@ -1,6 +1,6 @@
 {
   "name": "@thomasremblier/design-system",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Design system de Thomas Remblier, artiste CGI produit : tokens, CSS, composants et assets.",
   "license": "MIT",
   "author": "Thomas Remblier <contact@thomasremblier.fr> (https://thomasremblier.fr)",

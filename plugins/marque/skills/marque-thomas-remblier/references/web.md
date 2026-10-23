@@ -25,7 +25,8 @@ npm i github:thomasrembl/design-system   # installe aussi @fontsource-variable/g
 | Filets | aucun | tableaux et KPI | séparateurs |
 
 ## Tokens utiles
-Couleurs : `--bg --surface --surface-2 --surface-3 --ink --muted --accent --accent-hover --on-accent --focus --line --line-soft --field-border --field-hover --panel --scrim`, lumière `--key --rim` (triplets), états `--amber --red --error --ok`, papier `--paper*`.
+Couleurs : `--bg --surface --surface-2 --surface-3 --ink --muted --accent --accent-hover --on-accent --focus --line --line-soft --field-border --field-hover --panel`, voiles et médias `--scrim` (derrière un tiroir) `--overlay-strong` (visionneuse plein écran) `--overlay-soft` (aperçu vidéo) `--chip` (pastille sur un média) `--bar` (barre mobile) `--video-bg` `--highlight` (« à compléter »), lumière `--key --rim` (triplets), états `--amber --red --error --ok`, papier `--paper*`.
+Erreur en deux tons (Figma) : contour d'un champ et filet de notice en `--red`, texte du message en `--error`.
 Typo : `--font --w-light --w-text --w-strong --step-small --step-ui --step-body --step-lead --step-kpi --step-title --step-head`.
 Espaces : `--space-4 … --space-120` (4, 8, 12, 16, 24, 32, 48, 64, 80, 120), `--gutter` (16 → 32 px), `--gap` 10 px.
 Formes : `--radius` 6 px, `--radius-pill`, `--shadow-panel` (seule ombre). Tailles : `--sidebar --sidebar-tool --column --legal --page --panel-width --button-height --button-height-sm --field-height`.

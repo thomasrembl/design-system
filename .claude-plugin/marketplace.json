@@ -3,13 +3,19 @@
   "name": "thomasremblier",
   "version": "1.0.0",
   "description": "Plugins Claude Code de Thomas Remblier, artiste CGI produit.",
-  "owner": { "name": "Thomas Remblier", "email": "contact@thomasremblier.fr" },
+  "owner": {
+    "name": "Thomas Remblier",
+    "email": "contact@thomasremblier.fr"
+  },
   "plugins": [
     {
       "name": "marque",
       "description": "Marque Thomas Remblier : plateforme, charte, règles web et design system pour créer sites, pages, composants et visuels.",
-      "version": "0.1.0",
-      "author": { "name": "Thomas Remblier", "email": "contact@thomasremblier.fr" },
+      "version": "0.1.1",
+      "author": {
+        "name": "Thomas Remblier",
+        "email": "contact@thomasremblier.fr"
+      },
       "source": "./plugins/marque",
       "category": "design"
     }

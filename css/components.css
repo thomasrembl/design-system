@@ -51,7 +51,8 @@ select.field__control {
 .field__control:hover { background-color: var(--field-hover); }
 .field__control:focus { outline: none; border-color: var(--ink); }
 .field__control:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
-.field__control[aria-invalid="true"], .field__control:user-invalid { border-color: var(--error); }
+/* Erreur en deux tons (Figma) : contour rouge, message rouge clair. */
+.field__control[aria-invalid="true"], .field__control:user-invalid { border-color: var(--red); }
 .field__hint { font-size: var(--step-small); color: var(--muted); }
 .field__error { font-size: var(--step-small); color: var(--error); }
 .field--money .field__control { font-variant-numeric: tabular-nums; }
@@ -106,7 +107,7 @@ select.field__control {
 .notice--ambre .notice__title { color: var(--amber); }
 .notice--ok { border-left-color: var(--ok); }
 .notice--ok .notice__title { color: var(--ok); }
-.notice--erreur { border-color: color-mix(in srgb, var(--error) 40%, transparent); border-left-color: var(--error); }
+.notice--erreur { border-color: color-mix(in srgb, var(--red) 40%, transparent); border-left-color: var(--red); }
 .notice--erreur .notice__title { color: var(--error); }
 
 /* ---------- KPI et jauges (outil) ---------- */

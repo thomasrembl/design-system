@@ -24,6 +24,7 @@ const COUPLES = [
   ['--on-accent', '--accent'], ['--on-accent', '--accent-hover'],
   ['--amber', '--surface-2'], ['--red', '--surface-2'], ['--ok', '--surface-2'], ['--error', '--surface-2'],
   ['--paper-ink', '--paper'], ['--paper-muted', '--paper'], ['--paper-muted', '--paper-surface'],
+  ['--ink', '--highlight'],
 ];
 
 function luminance(hex) {
