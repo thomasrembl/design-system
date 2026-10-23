@@ -1,0 +1,32 @@
+# Publie une version à chaque fusion sur main dont le numéro (package.json) n'a pas encore d'étiquette :
+# étiquette vX.Y.Z + release GitHub. Les sites suivent ces étiquettes (dépendance « #semver:0.x »).
+name: Publication
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+concurrency: publication
+jobs:
+  publier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm test
+      - name: Étiqueter et publier la version si elle est nouvelle
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          TAG="v$VERSION"
+          if git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
+            echo "$TAG existe déjà : rien à publier."
+            exit 0
+          fi
+          gh release create "$TAG" --target "$GITHUB_SHA" --title "$TAG" --generate-notes
+          echo "Version $TAG publiée."

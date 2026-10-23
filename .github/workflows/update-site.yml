@@ -1,0 +1,131 @@
+# Workflow réutilisable : met un site à jour avec la dernière version du design system.
+# Appelé par chaque site (modèle : templates/design-system-update.yml). Le site doit déclarer
+# "@thomasremblier/design-system": "github:thomasrembl/design-system#semver:0.x".
+name: Mise à jour du design system
+on:
+  workflow_call:
+    inputs:
+      verify:
+        description: Commande qui doit réussir avant la fusion (installation propre, build, tests).
+        type: string
+        required: true
+      auto-merge:
+        description: Fusionner seul quand la vérification passe ; sinon la PR attend une validation.
+        type: boolean
+        default: true
+      base:
+        description: Branche mise à jour (celle qui se déploie).
+        type: string
+        default: main
+      sync-branch:
+        description: Branche de travail à resynchroniser après la fusion (ex. dev), vide pour aucune.
+        type: string
+        default: ''
+      after-merge-workflow:
+        description: Workflow à relancer sur la base après la fusion (ex. ci.yml), car une fusion faite par une action ne déclenche rien d'elle-même.
+        type: string
+        default: ''
+      node-version:
+        type: string
+        default: '22'
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+jobs:
+  maj:
+    runs-on: ubuntu-latest
+    concurrency: design-system-update
+    env:
+      PAQUET: '@thomasremblier/design-system'
+      DEPOT: thomasrembl/design-system
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.base }}
+          fetch-depth: 0
+
+      - name: Comparer avec la dernière version publiée
+        id: check
+        run: |
+          SPEC=$(node -p "(require('./package.json').dependencies || {})[process.env.PAQUET] || ''")
+          if [ -z "$SPEC" ]; then echo "::error::$PAQUET n'est pas une dépendance de ce site."; exit 1; fi
+          case "$SPEC" in *"#semver:"*) ;; *) echo "::warning::Déclarer $PAQUET en github:$DEPOT#semver:0.x pour suivre les versions publiées." ;; esac
+          ACTUELLE=$(node -p "((require('./package-lock.json').packages || {})['node_modules/' + process.env.PAQUET] || {}).version || ''")
+          DERNIERE=$(git ls-remote --tags --refs "https://github.com/$DEPOT.git" 'v*' | sed 's#.*refs/tags/v##' | sort -V | tail -1)
+          echo "spec=$SPEC" >> "$GITHUB_OUTPUT"
+          echo "actuelle=$ACTUELLE" >> "$GITHUB_OUTPUT"
+          echo "Version installée : ${ACTUELLE:-aucune} · dernière publiée : ${DERNIERE:-aucune}"
+          if [ -z "$DERNIERE" ] || [ "$ACTUELLE" = "$DERNIERE" ]; then echo "a_faire=non" >> "$GITHUB_OUTPUT"; else echo "a_faire=oui" >> "$GITHUB_OUTPUT"; fi
+
+      - uses: actions/setup-node@v4
+        if: steps.check.outputs.a_faire == 'oui'
+        with:
+          node-version: ${{ inputs.node-version }}
+
+      - name: Résoudre la nouvelle version (sans exécuter de script)
+        id: maj
+        if: steps.check.outputs.a_faire == 'oui'
+        env:
+          SPEC: ${{ steps.check.outputs.spec }}
+        run: |
+          npm install --ignore-scripts --no-audit --no-fund "$PAQUET@$SPEC"
+          APRES=$(node -p "require('./package-lock.json').packages['node_modules/' + process.env.PAQUET].version")
+          echo "apres=$APRES" >> "$GITHUB_OUTPUT"
+          if git diff --quiet -- package.json package-lock.json; then echo "nouvelle=non" >> "$GITHUB_OUTPUT"; else echo "nouvelle=oui" >> "$GITHUB_OUTPUT"; fi
+
+      - name: Vérifier le site
+        id: verif
+        if: steps.maj.outputs.nouvelle == 'oui'
+        continue-on-error: true
+        run: ${{ inputs.verify }}
+
+      - name: Ouvrir la PR et fusionner si tout passe
+        if: steps.maj.outputs.nouvelle == 'oui'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          AVANT: ${{ steps.check.outputs.actuelle }}
+          APRES: ${{ steps.maj.outputs.apres }}
+          VERIF: ${{ steps.verif.outcome }}
+          AUTO: ${{ inputs.auto-merge }}
+          BASE: ${{ inputs.base }}
+          SYNC: ${{ inputs.sync-branch }}
+          APRES_FUSION: ${{ inputs.after-merge-workflow }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          BRANCHE="design-system/v$APRES"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git switch -C "$BRANCHE"
+          git add package.json package-lock.json
+          git commit -m "chore: update the design system to v$APRES"
+          git push -f origin "$BRANCHE"
+          if [ "$VERIF" = "success" ]; then ETAT="Vérification réussie"; else ETAT="Vérification en échec : à regarder avant de fusionner"; fi
+          CORPS="Mise à jour automatique de $PAQUET : ${AVANT:-?} → $APRES. Notes : https://github.com/$DEPOT/releases/tag/v$APRES
+
+          $ETAT ($RUN_URL)."
+          if gh pr view "$BRANCHE" --json url >/dev/null 2>&1; then
+            gh pr comment "$BRANCHE" --body "$CORPS"
+          else
+            gh pr create --base "$BASE" --head "$BRANCHE" --title "Design system v$APRES" --body "$CORPS"
+          fi
+          if [ "$VERIF" != "success" ] || [ "$AUTO" != "true" ]; then
+            echo "PR ouverte, fusion laissée à une validation."
+            exit 0
+          fi
+          gh pr merge "$BRANCHE" --merge --delete-branch
+          if [ -n "$APRES_FUSION" ]; then gh workflow run "$APRES_FUSION" --ref "$BASE"; fi
+          if [ -n "$SYNC" ]; then
+            git fetch -q origin
+            if git switch -q "$SYNC" && git merge -q --no-edit "origin/$BASE" && git push -q origin "$SYNC"; then
+              echo "$SYNC resynchronisée avec $BASE."
+            else
+              echo "::warning::$SYNC n'a pas pu être resynchronisée automatiquement avec $BASE (conflit) : à faire à la main."
+            fi
+          fi
+
+      - name: Signaler l'échec de la vérification
+        if: steps.verif.outcome == 'failure'
+        run: |
+          echo "::error::La vérification du site a échoué avec v${{ steps.maj.outputs.apres }} : la PR reste ouverte."
+          exit 1
