@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design system — Thomas Remblier</title>
+<link rel="icon" href="../assets/favicon/favicon.svg" type="image/svg+xml">
+<!-- Démo seulement : en production, la police vient de css/fonts.css (auto-hébergée). -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..450&display=swap">
+<link rel="stylesheet" href="../css/index.css">
+<style>
+  :root { --font: "Geist Variable", "Geist", system-ui, sans-serif; }
+  main { max-width: 1240px; margin: 0 auto; padding: var(--space-80) var(--gutter) var(--space-120); display: grid; gap: var(--space-80); }
+  section { display: grid; gap: var(--space-32); }
+  .rangee { display: flex; flex-wrap: wrap; gap: var(--space-16); align-items: center; }
+  .grille-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-24); }
+  .bloc { background: var(--surface); border-radius: var(--radius); padding: var(--space-24); display: grid; gap: var(--space-12); }
+  .pastilles { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--space-16); }
+  .pastille { display: grid; gap: 6px; font-size: var(--step-small); }
+  .pastille i { display: block; height: 72px; border-radius: var(--radius); border: 1px solid var(--line); }
+  .espaces { display: grid; gap: 6px; }
+  .espaces div { display: flex; align-items: center; gap: var(--space-16); font-size: var(--step-small); color: var(--muted); }
+  .espaces b { display: block; height: 12px; background: var(--muted); border-radius: 2px; }
+  .vignette { width: 100%; height: 100%; background: radial-gradient(circle at 30% 25%, rgb(var(--key) / 0.28), transparent 60%), radial-gradient(circle at 85% 90%, rgb(var(--rim) / 0.22), transparent 55%), var(--surface); }
+  .en-tete { display: flex; align-items: center; gap: var(--space-24); }
+  .en-tete img { width: 72px; height: 72px; }
+</style>
+</head>
+<body>
+<div class="studio" aria-hidden="true">
+  <div class="studio__spot studio__spot--key"></div><div class="studio__spot studio__spot--rim"></div>
+  <div class="studio__spot studio__spot--fill"></div><div class="studio__grain"></div>
+</div>
+<main>
+  <header class="en-tete">
+    <img src="../assets/logo/tuile.svg" alt="">
+    <div>
+      <h1 class="t-display">Design system</h1>
+      <p class="t-accroche t-muted">Thomas Remblier · Artiste CGI produit · L’image avant le produit.</p>
+    </div>
+  </header>
+
+  <section>
+    <h2 class="t-titre">Couleurs</h2>
+    <div class="pastilles">
+      <div class="pastille"><i style="background: var(--bg)"></i>--bg</div>
+      <div class="pastille"><i style="background: var(--surface)"></i>--surface</div>
+      <div class="pastille"><i style="background: var(--surface-2)"></i>--surface-2</div>
+      <div class="pastille"><i style="background: var(--surface-3)"></i>--surface-3</div>
+      <div class="pastille"><i style="background: var(--muted)"></i>--muted</div>
+      <div class="pastille"><i style="background: var(--ink)"></i>--ink</div>
+      <div class="pastille"><i style="background: var(--accent)"></i>--accent</div>
+      <div class="pastille"><i style="background: rgb(var(--key))"></i>--key (lumière)</div>
+      <div class="pastille"><i style="background: rgb(var(--rim))"></i>--rim (lumière)</div>
+      <div class="pastille"><i style="background: var(--amber)"></i>--amber</div>
+      <div class="pastille"><i style="background: var(--red)"></i>--red</div>
+      <div class="pastille"><i style="background: var(--error)"></i>--error</div>
+      <div class="pastille"><i style="background: var(--ok)"></i>--ok</div>
+      <div class="pastille"><i style="background: var(--paper)"></i>--paper</div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="t-titre">Typographie</h2>
+    <div class="grille-2">
+      <div class="bloc"><span class="t-petit t-muted">.t-display</span><p class="t-display">L’image avant le produit.</p></div>
+      <div class="bloc"><span class="t-petit t-muted">.t-titre</span><p class="t-titre">Un produit à montrer ?</p>
+        <span class="t-petit t-muted">.t-accroche</span><p class="t-accroche">Packshots, films 3D et expériences web.</p></div>
+      <div class="bloc"><span class="t-petit t-muted">.t-corps</span><p class="t-corps colonne">Décrivez votre projet : je réponds sous 48 heures avec une première estimation.</p>
+        <span class="t-petit t-muted">.t-petit · .t-chiffre</span><p class="t-petit">Packshot · 2026</p><p class="t-chiffre">12 480 €</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="t-titre">Espacements</h2>
+    <div class="espaces">
+      <div><span style="width: 90px">--space-4</span><b style="width: var(--space-4)"></b></div>
+      <div><span style="width: 90px">--space-8</span><b style="width: var(--space-8)"></b></div>
+      <div><span style="width: 90px">--space-16</span><b style="width: var(--space-16)"></b></div>
+      <div><span style="width: 90px">--space-24</span><b style="width: var(--space-24)"></b></div>
+      <div><span style="width: 90px">--space-32</span><b style="width: var(--space-32)"></b></div>
+      <div><span style="width: 90px">--space-48</span><b style="width: var(--space-48)"></b></div>
+      <div><span style="width: 90px">--space-64</span><b style="width: var(--space-64)"></b></div>
+      <div><span style="width: 90px">--space-80</span><b style="width: var(--space-80)"></b></div>
+      <div><span style="width: 90px">--space-120</span><b style="width: var(--space-120)"></b></div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="t-titre">Boutons</h2>
+    <div class="rangee">
+      <a class="btn btn--light" href="#contact">Me contacter</a>
+      <a class="btn btn--quiet" href="#projets">Voir les projets</a>
+      <button class="btn btn--ghost" type="button">Annuler</button>
+      <button class="btn btn--quiet btn--small" type="button">Petit</button>
+      <button class="btn btn--light" type="button" disabled>Désactivé</button>
+      <button class="icon-button" type="button" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 5l14 14M19 5 5 19"/></svg></button>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="t-titre">Champs</h2>
+    <div class="grille-2">
+      <label class="field"><span class="field__label">Adresse e-mail</span><input class="field__control" type="email" placeholder="nom@marque.fr"><span class="field__hint">Je réponds sous 48 heures.</span></label>
+      <label class="field"><span class="field__label">Adresse e-mail</span><input class="field__control" type="email" value="nom@" aria-invalid="true"><span class="field__error">Cette adresse est incomplète.</span></label>
+      <label class="field"><span class="field__label">Type de projet</span><select class="field__control"><option>Packshot</option><option>Film 3D</option><option>Web interactif</option></select></label>
+      <div class="check"><label class="check__label"><input class="check__box" type="checkbox" checked> J’accepte d’être recontacté</label></div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="t-titre">Cartes projet · grille vitrine</h2>
+    <div class="grid">
+      <a class="card" href="#"><div class="card__media"><div class="vignette"></div></div><div class="card__meta"><span class="card__title">Flacon Aurore</span><span class="card__kind">Packshot · 2026</span></div></a>
+      <a class="card" href="#"><div class="card__media"><div class="vignette"></div></div><div class="card__meta"><span class="card__title">Montre Série 4</span><span class="card__kind">Film 3D · 2026</span></div></a>
+      <a class="card" href="#"><div class="card__media"><div class="vignette"></div></div><div class="card__meta"><span class="card__title">Casque Halo</span><span class="card__kind">Web interactif · 2025</span></div></a>
+    </div>
+  </section>
+
+  <section data-contexte="outil">
+    <h2 class="t-titre">Outil · badges, notices, KPI, jauges, tableau</h2>
+    <div class="rangee">
+      <span class="badge badge--ok"><span class="badge__dot"></span>Fait</span>
+      <span class="badge badge--rouge"><span class="badge__dot"></span>En retard</span>
+      <span class="badge badge--ambre"><span class="badge__dot"></span>En attente</span>
+      <span class="badge badge--neutre"><span class="badge__dot"></span>À faire</span>
+      <span class="badge badge--muet"><span class="badge__dot"></span>Hors activité</span>
+    </div>
+    <div class="grille-2">
+      <div class="notice notice--ambre" role="status"><p class="notice__title">Facture en attente</p><div class="notice__body"><p>Échéance dans 3 jours.</p></div></div>
+      <div class="notice notice--ok" role="status"><p class="notice__title">Déclaration envoyée</p><div class="notice__body"><p>Rien à faire pour l’instant.</p></div></div>
+      <div class="notice notice--erreur" role="alert"><p class="notice__title">Envoi impossible</p><div class="notice__body"><p>Réessaie dans 15 minutes.</p></div></div>
+    </div>
+    <div class="bloc" style="padding: 0">
+      <dl class="kpis">
+        <div class="kpi"><dt class="kpi__label">Chiffre d’affaires</dt><dd class="kpi__value">18 200 €</dd><dd class="kpi__hint">Depuis janvier</dd></div>
+        <div class="kpi kpi--ambre"><dt class="kpi__label">Cotisations</dt><dd class="kpi__value">4 020 €</dd><dd class="kpi__hint">À déclarer le 31</dd></div>
+        <div class="kpi"><dt class="kpi__label">Ce qui te reste</dt><dd class="kpi__value">12 480 €</dd></div>
+      </dl>
+    </div>
+    <div class="bloc" style="padding: 0">
+      <div class="gauges">
+        <div class="gauge"><div class="gauge__head"><span class="gauge__label">Plafond micro</span><span class="gauge__value">23 %</span></div><div class="gauge__track"><div class="gauge__fill" style="width: 23%"></div></div><span class="gauge__detail">18 200 € sur 77 700 €</span></div>
+        <div class="gauge gauge--ambre"><div class="gauge__head"><span class="gauge__label">Seuil TVA</span><span class="gauge__value">82 %</span></div><div class="gauge__track"><div class="gauge__fill" style="width: 82%"></div></div><p class="gauge__message">Seuil proche : prévois la TVA.</p></div>
+      </div>
+    </div>
+    <div class="table" style="border-radius: var(--radius)">
+      <table>
+        <thead><tr><th>Désignation</th><th>Statut</th><th class="is-right">Montant HT</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Packshot — 3 vues</th><td><span class="badge badge--ok"><span class="badge__dot"></span>Encaissée</span></td><td class="is-right num">1 350,00 €</td></tr>
+          <tr><th scope="row">Film 3D — 30 s</th><td><span class="badge badge--ambre"><span class="badge__dot"></span>En attente</span></td><td class="is-right num">4 800,00 €</td></tr>
+          <tr><th scope="row">Web interactif</th><td><span class="badge badge--rouge"><span class="badge__dot"></span>En retard</span></td><td class="is-right num">920,00 €</td></tr>
+        </tbody>
+        <tfoot><tr><th scope="row">Total</th><td></td><td class="is-right num">7 070,00 €</td></tr></tfoot>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="t-titre">Navigation · tiroir</h2>
+    <div class="grille-2">
+      <div class="bloc"><nav class="nav" style="margin: 0"><a href="#">Tout</a><a href="#" aria-current="page">Packshot</a><a href="#">Film 3D</a><a href="#">Web interactif</a></nav></div>
+      <div class="bloc"><p class="t-interface t-muted">Le tiroir s’ouvre par-dessus la page, avec la seule ombre de la marque.</p><div><button class="btn btn--light" type="button" onclick="document.getElementById('tiroir').showModal()">Ouvrir le tiroir</button></div></div>
+    </div>
+  </section>
+
+  <section class="papier bloc" style="padding: var(--space-48)">
+    <h2 class="t-titre">Papier</h2>
+    <p class="t-corps">Le contexte .papier passe la page en clair pour les devis et factures.</p>
+    <div class="rangee"><a class="btn btn--light" href="#">Action sur papier</a></div>
+  </section>
+</main>
+
+<dialog class="drawer" id="tiroir">
+  <div class="drawer__inner">
+    <div class="drawer__head">
+      <h2 class="drawer__title">Un produit à montrer ?</h2>
+      <button class="drawer__close" type="button" aria-label="Fermer" onclick="this.closest('dialog').close()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 5l14 14M19 5 5 19"/></svg></button>
+    </div>
+    <p class="t-corps">Décrivez votre projet : je réponds sous 48 heures avec une première estimation.</p>
+    <label class="field"><span class="field__label">Adresse e-mail</span><input class="field__control" type="email"></label>
+    <button class="btn btn--light btn--block" type="button">Envoyer</button>
+  </div>
+</dialog>
+</body>
+</html>
