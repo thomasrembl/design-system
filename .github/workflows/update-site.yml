@@ -1,12 +1,14 @@
 # Workflow réutilisable : met un site à jour avec la dernière version du design system.
 # Appelé par chaque site (modèle : templates/design-system-update.yml). Le site doit déclarer
 # "@thomasremblier/design-system": "github:thomasrembl/design-system#semver:0.x".
+# Trois jobs : préparer (lecture seule, aucun script), vérifier (lecture seule, sans identifiants git),
+# publier (écriture, n'exécute aucun code du paquet ni du site).
 name: Mise à jour du design system
 on:
   workflow_call:
     inputs:
       verify:
-        description: Commande qui doit réussir avant la fusion (installation propre, build, tests).
+        description: Commande qui doit réussir avant la fusion (installation propre, build, tests). Tourne sans droit d'écriture.
         type: string
         required: true
       auto-merge:
@@ -18,103 +20,166 @@ on:
         type: string
         default: main
       sync-branch:
-        description: Branche de travail à resynchroniser après la fusion (ex. dev), vide pour aucune.
+        description: Branche de travail à resynchroniser après une fusion automatique (ex. dev), vide pour aucune.
         type: string
         default: ''
-      after-merge-workflow:
-        description: Workflow à relancer sur la base après la fusion (ex. ci.yml), car une fusion faite par une action ne déclenche rien d'elle-même.
+      after-merge-dispatch:
+        description: Événement repository_dispatch envoyé après une fusion automatique (ex. design-system-updated), pour relancer une CI ou un déploiement qu'une fusion faite par une action ne déclenche pas ; vide pour aucun.
         type: string
         default: ''
       node-version:
         type: string
         default: '22'
 permissions:
-  contents: write
-  pull-requests: write
-  actions: write
+  contents: read
+env:
+  PAQUET: '@thomasremblier/design-system'
+  DEPOT: thomasrembl/design-system
 jobs:
-  maj:
+  preparer:
     runs-on: ubuntu-latest
-    concurrency: design-system-update
-    env:
-      PAQUET: '@thomasremblier/design-system'
-      DEPOT: thomasrembl/design-system
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      a_faire: ${{ steps.pr.outputs.a_faire }}
+      actuelle: ${{ steps.check.outputs.actuelle }}
+      cible: ${{ steps.check.outputs.cible }}
+      branche: ${{ steps.check.outputs.branche }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.base }}
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ inputs.node-version }}
+
+      - name: Chercher une version plus récente dans la plage déclarée
+        id: check
+        run: |
+          node <<'JS'
+          const { execSync } = require('node:child_process');
+          const { appendFileSync } = require('node:fs');
+          const semver = require(require('node:path').join(execSync('npm root -g').toString().trim(), 'npm/node_modules/semver'));
+          const sortie = (k, v) => appendFileSync(process.env.GITHUB_OUTPUT, `${k}=${v}\n`);
+          const paquet = process.env.PAQUET;
+          const spec = (require('./package.json').dependencies || {})[paquet] || '';
+          if (!spec) { console.log(`::error::${paquet} n'est pas une dépendance de ce site.`); process.exit(1); }
+          const plage = (spec.match(/#semver:(.+)$/) || [])[1];
+          if (!plage) console.log(`::warning::Déclarer ${paquet} en github:${process.env.DEPOT}#semver:0.x pour suivre les versions publiées.`);
+          const actuelle = ((require('./package-lock.json').packages || {})['node_modules/' + paquet] || {}).version || '0.0.0';
+          const etiquettes = execSync(`git ls-remote --tags --refs https://github.com/${process.env.DEPOT}.git "v*"`).toString()
+            .split('\n').map(l => l.split('refs/tags/v')[1]).filter(v => v && semver.valid(v));
+          const cible = semver.maxSatisfying(etiquettes, plage || '*') || '';
+          console.log(`Version installée : ${actuelle} · plage : ${plage || '(aucune)'} · meilleure version publiée dans la plage : ${cible || 'aucune'}`);
+          sortie('actuelle', actuelle);
+          sortie('cible', cible);
+          sortie('branche', `design-system/v${cible}`);
+          sortie('nouvelle', cible && semver.gt(cible, actuelle) ? 'oui' : 'non');
+          JS
+
+      - name: Ne rien refaire si cette version a déjà sa PR
+        id: pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NOUVELLE: ${{ steps.check.outputs.nouvelle }}
+          BRANCHE: ${{ steps.check.outputs.branche }}
+        run: |
+          if [ "$NOUVELLE" != "oui" ]; then echo "Déjà à jour."; echo "a_faire=false" >> "$GITHUB_OUTPUT"; exit 0; fi
+          PR=$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$BRANCHE" --state all --json number,state --jq '.[0] | select(.) | "#\(.number) (\(.state))"')
+          if [ -n "$PR" ]; then
+            echo "La PR $PR existe déjà pour $BRANCHE : rien à refaire tant qu'une version plus récente n'est pas publiée."
+            echo "a_faire=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "a_faire=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Résoudre la nouvelle version (sans exécuter de script)
+        if: steps.pr.outputs.a_faire == 'true'
+        env:
+          CIBLE: ${{ steps.check.outputs.cible }}
+        run: |
+          SPEC=$(node -p "require('./package.json').dependencies[process.env.PAQUET]")
+          npm install --ignore-scripts --no-audit --no-fund --package-lock-only "$PAQUET@$SPEC"
+          OBTENUE=$(node -p "require('./package-lock.json').packages['node_modules/' + process.env.PAQUET].version")
+          if [ "$OBTENUE" != "$CIBLE" ]; then echo "::error::npm a résolu $OBTENUE au lieu de $CIBLE."; exit 1; fi
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: steps.pr.outputs.a_faire == 'true'
+        with:
+          name: maj-design-system
+          path: |
+            package.json
+            package-lock.json
+          retention-days: 1
+
+  verifier:
+    needs: preparer
+    if: needs.preparer.outputs.a_faire == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.base }}
+          persist-credentials: false
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        with:
+          name: maj-design-system
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ inputs.node-version }}
+      - name: Vérifier le site
+        run: ${{ inputs.verify }}
+
+  publier:
+    needs: [preparer, verifier]
+    if: always() && needs.preparer.outputs.a_faire == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    concurrency: design-system-publication
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ inputs.base }}
           fetch-depth: 0
-
-      - name: Comparer avec la dernière version publiée
-        id: check
-        run: |
-          SPEC=$(node -p "(require('./package.json').dependencies || {})[process.env.PAQUET] || ''")
-          if [ -z "$SPEC" ]; then echo "::error::$PAQUET n'est pas une dépendance de ce site."; exit 1; fi
-          case "$SPEC" in *"#semver:"*) ;; *) echo "::warning::Déclarer $PAQUET en github:$DEPOT#semver:0.x pour suivre les versions publiées." ;; esac
-          ACTUELLE=$(node -p "((require('./package-lock.json').packages || {})['node_modules/' + process.env.PAQUET] || {}).version || ''")
-          DERNIERE=$(git ls-remote --tags --refs "https://github.com/$DEPOT.git" 'v*' | sed 's#.*refs/tags/v##' | sort -V | tail -1)
-          echo "spec=$SPEC" >> "$GITHUB_OUTPUT"
-          echo "actuelle=$ACTUELLE" >> "$GITHUB_OUTPUT"
-          echo "Version installée : ${ACTUELLE:-aucune} · dernière publiée : ${DERNIERE:-aucune}"
-          if [ -z "$DERNIERE" ] || [ "$ACTUELLE" = "$DERNIERE" ]; then echo "a_faire=non" >> "$GITHUB_OUTPUT"; else echo "a_faire=oui" >> "$GITHUB_OUTPUT"; fi
-
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        if: steps.check.outputs.a_faire == 'oui'
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
-          node-version: ${{ inputs.node-version }}
-
-      - name: Résoudre la nouvelle version (sans exécuter de script)
-        id: maj
-        if: steps.check.outputs.a_faire == 'oui'
-        env:
-          SPEC: ${{ steps.check.outputs.spec }}
-        run: |
-          npm install --ignore-scripts --no-audit --no-fund "$PAQUET@$SPEC"
-          APRES=$(node -p "require('./package-lock.json').packages['node_modules/' + process.env.PAQUET].version")
-          echo "apres=$APRES" >> "$GITHUB_OUTPUT"
-          if git diff --quiet -- package.json package-lock.json; then echo "nouvelle=non" >> "$GITHUB_OUTPUT"; else echo "nouvelle=oui" >> "$GITHUB_OUTPUT"; fi
-
-      - name: Vérifier le site
-        id: verif
-        if: steps.maj.outputs.nouvelle == 'oui'
-        continue-on-error: true
-        run: ${{ inputs.verify }}
-
-      - name: Ouvrir la PR et fusionner si tout passe
-        if: steps.maj.outputs.nouvelle == 'oui'
+          name: maj-design-system
+      - name: Ouvrir la PR et fusionner si la vérification a réussi
         env:
           GH_TOKEN: ${{ github.token }}
-          AVANT: ${{ steps.check.outputs.actuelle }}
-          APRES: ${{ steps.maj.outputs.apres }}
-          VERIF: ${{ steps.verif.outcome }}
+          AVANT: ${{ needs.preparer.outputs.actuelle }}
+          APRES: ${{ needs.preparer.outputs.cible }}
+          BRANCHE: ${{ needs.preparer.outputs.branche }}
+          VERIF: ${{ needs.verifier.result }}
           AUTO: ${{ inputs.auto-merge }}
           BASE: ${{ inputs.base }}
           SYNC: ${{ inputs.sync-branch }}
-          APRES_FUSION: ${{ inputs.after-merge-workflow }}
+          DISPATCH: ${{ inputs.after-merge-dispatch }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          BRANCHE="design-system/v$APRES"
           git config user.name "github-actions[bot]"
           git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
           git switch -C "$BRANCHE"
           git add package.json package-lock.json
           git commit -m "chore: update the design system to v$APRES"
-          git push -f origin "$BRANCHE"
+          git push origin "$BRANCHE"
           if [ "$VERIF" = "success" ]; then ETAT="Vérification réussie"; else ETAT="Vérification en échec : à regarder avant de fusionner"; fi
-          CORPS="Mise à jour automatique de $PAQUET : ${AVANT:-?} → $APRES. Notes : https://github.com/$DEPOT/releases/tag/v$APRES
+          gh pr create --base "$BASE" --head "$BRANCHE" --title "Design system v$APRES" \
+            --body "Mise à jour automatique de $PAQUET : $AVANT → $APRES. Notes : https://github.com/$DEPOT/releases/tag/v$APRES
 
           $ETAT ($RUN_URL)."
-          if gh pr view "$BRANCHE" --json url >/dev/null 2>&1; then
-            gh pr comment "$BRANCHE" --body "$CORPS"
-          else
-            gh pr create --base "$BASE" --head "$BRANCHE" --title "Design system v$APRES" --body "$CORPS"
-          fi
           if [ "$VERIF" != "success" ] || [ "$AUTO" != "true" ]; then
             echo "PR ouverte, fusion laissée à une validation."
             exit 0
           fi
           gh pr merge "$BRANCHE" --merge --delete-branch
-          if [ -n "$APRES_FUSION" ]; then gh workflow run "$APRES_FUSION" --ref "$BASE"; fi
+          if [ -n "$DISPATCH" ]; then gh api "repos/$GITHUB_REPOSITORY/dispatches" -f event_type="$DISPATCH"; fi
           if [ -n "$SYNC" ]; then
             git fetch -q origin
             if git switch -q "$SYNC" && git merge -q --no-edit "origin/$BASE" && git push -q origin "$SYNC"; then
@@ -123,9 +188,8 @@ jobs:
               echo "::warning::$SYNC n'a pas pu être resynchronisée automatiquement avec $BASE (conflit) : à faire à la main."
             fi
           fi
-
       - name: Signaler l'échec de la vérification
-        if: steps.verif.outcome == 'failure'
+        if: needs.verifier.result != 'success'
         run: |
-          echo "::error::La vérification du site a échoué avec v${{ steps.maj.outputs.apres }} : la PR reste ouverte."
+          echo "::error::La vérification du site a échoué avec v${{ needs.preparer.outputs.cible }} : la PR reste ouverte, rien ne sera relancé pour cette version."
           exit 1

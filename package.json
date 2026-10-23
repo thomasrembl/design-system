@@ -1,23 +1,32 @@
 {
   "name": "@thomasremblier/design-system",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Design system de Thomas Remblier, artiste CGI produit : tokens, CSS, composants et assets.",
   "license": "MIT",
   "author": "Thomas Remblier <contact@thomasremblier.fr> (https://thomasremblier.fr)",
-  "repository": { "type": "git", "url": "git+https://github.com/thomasrembl/design-system.git" },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thomasrembl/design-system.git"
+  },
   "type": "module",
-  "files": ["css", "tokens", "assets"],
+  "files": [
+    "css",
+    "tokens",
+    "assets"
+  ],
   "exports": {
     "./css/*": "./css/*",
     "./tokens.json": "./tokens/tokens.json",
     "./assets/*": "./assets/*"
   },
   "scripts": {
-    "build": "node scripts/build.mjs",
+    "tokens:build": "node scripts/build.mjs",
     "test": "node --test \"scripts/*.test.mjs\""
   },
   "dependencies": {
     "@fontsource-variable/geist": "^5.3.0"
   },
-  "engines": { "node": ">=20" }
+  "engines": {
+    "node": ">=20"
+  }
 }

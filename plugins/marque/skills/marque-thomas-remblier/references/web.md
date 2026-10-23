@@ -31,7 +31,7 @@ Typo : `--font --w-light --w-text --w-strong --step-small --step-ui --step-body 
 Espaces : `--space-4 … --space-120` (4, 8, 12, 16, 24, 32, 48, 64, 80, 120), `--gutter` (16 → 32 px), `--gap` 10 px.
 Formes : `--radius` 6 px, `--radius-pill`, `--shadow-panel` (seule ombre). Tailles : `--sidebar --sidebar-tool --column --legal --page --panel-width --button-height --button-height-sm --field-height`.
 Mouvement : `--ease` `cubic-bezier(0.22, 1, 0.36, 1)`, `--dur-color` 200 ms, `--dur-button` 250 ms, `--dur-menu` 350 ms, `--dur-panel` 500 ms, `--dur-reveal` 900 ms, `--dur-zoom` 1 200 ms.
-Un token manque ? L'ajouter dans `tokens/tokens.json` du dépôt `thomasrembl/design-system` (puis `npm run build`), jamais en dur dans un site.
+Un token manque ? L'ajouter dans `tokens/tokens.json` du dépôt `thomasrembl/design-system` (puis `npm run tokens:build`), jamais en dur dans un site.
 
 ## Composants (`css/components.css`)
 ```html
