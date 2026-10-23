@@ -11,7 +11,7 @@ Un seul endroit où vivent les tokens, le CSS, les composants, les assets et les
 | Chemin | Rôle |
 |---|---|
 | `tokens/tokens.json` | Source unique des tokens (format W3C Design Tokens : `$value`, `$type`, `$description`). |
-| `scripts/build.mjs` | Génère `css/tokens.css` depuis `tokens.json`. `npm run build`. |
+| `scripts/build.mjs` | Génère `css/tokens.css` depuis `tokens.json`. `npm run tokens:build`. |
 | `scripts/*.test.mjs` | Tests `node --test`. `npm test`. |
 | `css/tokens.css` | Généré, ne pas modifier à la main. |
 | `css/base.css` | Reset, typo Geist, focus, sélection, mouvement réduit, utilitaires (`.num`, `.visually-hidden`, `.skip`, `[hidden]`). |

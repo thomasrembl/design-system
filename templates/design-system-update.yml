@@ -16,9 +16,8 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-      actions: write
     with:
       verify: npm ci && npm run build && npm test
       auto-merge: true
       sync-branch: dev
-      # after-merge-workflow: ci.yml   # si le déploiement part d'un workflow lancé sur main
+      # after-merge-dispatch: design-system-updated   # si le déploiement part d'un workflow lancé sur main (voir README)
