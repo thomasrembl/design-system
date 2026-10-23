@@ -27,14 +27,14 @@ Un seul endroit où vivent les tokens, le CSS, les composants, les assets et les
 
 ## Tokens et noms CSS
 Les noms déjà utilisés par les deux sites restent identiques (`--bg`, `--surface`, `--surface-2`, `--ink`, `--muted`, `--accent`, `--on-accent`, `--focus`, `--key`, `--rim` en triplets RVB, `--font`, `--w-light|text|strong`, `--step-small|ui|body|lead|head`, `--sidebar`, `--gutter`, `--radius`, `--gap`, `--column`, `--ease`) : un site existant peut adopter le paquet sans renommer.
-S'ajoutent les valeurs du brief et de Compta : `--surface-3`, `--accent-hover`, `--line`, `--line-soft`, `--field-border`, `--amber`, `--red`, `--error`, `--ok`, `--rim-deep`, `--panel` (surface translucide des panneaux, 84 %), `--chart-chaud` (série principale des graphiques), groupe papier (`--paper`, `--paper-surface`, `--paper-ink`, `--paper-muted`, `--paper-line`), `--step-title`, espacements `--space-4` … `--space-120`, `--radius-pill`, tailles (`--sidebar-tool`, `--legal`, `--page`, `--panel-width`, `--button-height`, `--button-height-sm`, `--field-height`), durées (`--dur-color`, `--dur-button`, `--dur-menu`, `--dur-panel`, `--dur-reveal`, `--dur-zoom`), `--shadow-panel`.
+S'ajoutent les valeurs du brief et de Compta : `--surface-3`, `--accent-hover`, `--line`, `--line-soft`, `--field-border`, `--amber`, `--red`, `--error`, `--ok`, `--panel` (surface translucide des panneaux, 84 %), `--chart-chaud`, `--chart-froid`, `--chart-neutre` (séries des graphiques, noms de Compta, à la place de `--rim-deep`), `--field-hover`, `--scrim`, `--step-kpi`, groupe papier (`--paper`, `--paper-surface`, `--paper-ink`, `--paper-muted`, `--paper-line`), `--step-title`, espacements `--space-4` … `--space-120`, `--radius-pill`, tailles (`--sidebar-tool`, `--legal`, `--page`, `--panel-width`, `--button-height`, `--button-height-sm`, `--field-height`), durées (`--dur-color`, `--dur-button`, `--dur-menu`, `--dur-panel`, `--dur-reveal`, `--dur-zoom`), `--shadow-panel`.
 Contexte outil : `[data-contexte="outil"]` sur `<html>` passe `--sidebar` à 272 px (règle du brief : vitrine 304, outil 272).
 
 ## Composants
 Classes reprises des sites (mêmes noms quand ils existent, BEM sinon), liées uniquement aux variables ; chaque composant a son exemple HTML dans la démo et dans la référence du skill.
 
 ## Plugin Claude
-- Installation, une fois par machine : `/plugin marketplace add thomasrembl/design-system` puis `/plugin install marque@thomasremblier`.
+- Installation, une fois par machine : `/plugin install marque --marketplace thomasrembl/design-system` (ou, avant Claude Code 2.1.275 : `/plugin marketplace add thomasrembl/design-system` puis `/plugin install marque@thomasremblier`).
 - Skill `marque-thomas-remblier` : se déclenche pour tout site, page, composant, visuel ou texte de marque de Thomas. Il donne la marque en résumé, les règles non négociables, l'installation du paquet et renvoie à trois références : `marque.md` (plateforme, cibles, offres, ton de voix), `charte.md` (logo, couleurs, typo, lumière, icônes), `web.md` (contextes, tokens, composants et HTML, règles, accessibilité, mouvement).
 - Vérifié par `claude plugin validate`.
 
