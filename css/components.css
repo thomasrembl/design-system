@@ -203,3 +203,178 @@ select.field__control {
 }
 .drawer__close:hover { background: var(--surface-3); transform: rotate(90deg); }
 .drawer__close svg { width: 18px; height: 18px; }
+
+/* ---------- Panneau (outil) ---------- */
+/* <section class="panel-group" aria-labelledby="notes"><div class="panel-group__head"><h2 class="panel-group__title" id="notes">Notes<sup class="num" aria-hidden="true">3</sup>
+   <span class="visually-hidden">, 3 notes</span></h2><a class="panel-group__link" href="…">Tout voir</a></div><div class="panel panel--pad">…</div></section>
+   Vide : <div class="panel"><div class="panel__empty"><p class="panel__empty-title">Rien pour l’instant</p></div></div> · la surface sépare, sans bordure. */
+.panel-group { display: grid; gap: 14px; align-content: start; min-width: 0; }
+.panel-group__head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px 24px; flex-wrap: wrap; }
+.panel-group__title { font-size: var(--step-ui); font-weight: var(--w-strong); letter-spacing: -0.005em; line-height: 1.3; }
+.panel-group__title sup { font-size: 0.68em; position: relative; top: -0.45em; line-height: 0; margin-left: 3px; color: var(--muted); font-weight: var(--w-text); }
+.panel-group__aside { color: var(--muted); font-size: var(--step-small); }
+.panel-group__link {
+  display: inline-flex; align-items: center; min-height: var(--button-height-sm); color: var(--muted); font-size: var(--step-small);
+  text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; transition: color var(--dur-color);
+}
+.panel-group__link:hover { color: var(--ink); text-decoration-color: currentColor; }
+.panel { background: var(--panel); border-radius: var(--radius); min-width: 0; }
+.panel--pad { padding: 20px 22px; }
+.panel__empty { display: grid; justify-items: start; gap: 8px; padding: 28px 22px; }
+.panel__empty-title { font-weight: var(--w-strong); }
+.panel__empty-text { color: var(--muted); font-size: var(--step-small); max-width: 52ch; }
+
+/* ---------- Liste des demandes (outil) ---------- */
+/* Un groupe (« À traiter », « À vérifier », « À rattacher », « En échec », « Écartés ») = un .panel-group dont le .panel porte la liste.
+   <ul class="inquiries" aria-label="À vérifier"><li class="inquiry"><div class="inquiry__who"><span class="inquiry__name">Atelier Aube</span>
+   <span class="inquiry__sub">Formulaire du site</span></div><dl class="inquiry__facts"><div><dt>Type</dt><dd>Packshot</dd></div>…
+   <div><dt>Reçue le</dt><dd><time class="num" datetime="2026-10-24">24/10/2026</time></dd></div></dl>
+   <div class="inquiry__status"><span class="badge badge--ambre"><span class="badge__dot" aria-hidden="true"></span>À vérifier</span></div>
+   <div class="inquiry__actions">…boutons .btn--small…</div></li></ul>
+   Statuts : analysée --ok · à vérifier --ambre · en échec --rouge · à rattacher --neutre · écartée --muet. Ce qui vient d'un mail : du texte, jamais un lien. */
+.inquiries { display: grid; }
+.inquiry { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr) auto auto; align-items: center; gap: 10px 20px; padding: 14px 20px; min-width: 0; }
+.inquiry + .inquiry { border-top: 1px solid var(--line-soft); }
+.inquiry__who { display: grid; gap: 2px; min-width: 0; }
+.inquiry__name { font-weight: var(--w-strong); overflow-wrap: anywhere; }
+.inquiry__sub { color: var(--muted); font-size: var(--step-small); overflow-wrap: anywhere; }
+.inquiry__facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px 16px; margin: 0; }
+.inquiry__facts > div { display: grid; gap: 2px; align-content: start; min-width: 0; }
+.inquiry__facts dt { font-size: var(--step-small); color: var(--muted); }
+.inquiry__facts dd { margin: 0; overflow-wrap: anywhere; }
+.inquiry__actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; min-width: 0; }
+.inquiry__actions form { margin: 0; }
+/* Choix d'un client ou d'un projet, et texte du mail replié : sur toute la largeur de la ligne. */
+.inquiry__attach { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 12px 24px; }
+.inquiry__attach form { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; flex: 1 1 20rem; min-width: 0; }
+.inquiry__attach .field { flex: 1 1 12rem; max-width: 24rem; min-width: 0; }
+.inquiry__attach .btn { min-height: var(--field-height); }
+.inquiry__text { grid-column: 1 / -1; }
+.inquiry__text summary { width: fit-content; min-height: var(--button-height-sm); display: flex; align-items: center; color: var(--muted); font-size: var(--step-small); cursor: pointer; }
+.inquiry__text summary:hover { color: var(--ink); }
+.inquiry__body { margin: 8px 0 0; max-width: 70ch; max-height: 24rem; overflow-y: auto; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.5; }
+/* Tablette et téléphone : le nom et le statut sur la première ligne, les faits puis les boutons dessous. */
+@media (max-width: 1023px) {
+  .inquiry { grid-template-columns: minmax(0, 1fr) auto; }
+  .inquiry__status { grid-row: 1; grid-column: 2; }
+  .inquiry__facts, .inquiry__actions { grid-column: 1 / -1; }
+  .inquiry__actions { justify-content: flex-start; }
+}
+@media (max-width: 639px) {
+  .panel--pad { padding: 18px 16px; }
+  .inquiry { padding: 14px 16px; }
+  .inquiry__facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* ---------- Carte d'action à confirmer (outil) ---------- */
+/* <form class="action-card" method="post" aria-labelledby="ac-titre"><header class="action-card__head"><div class="action-card__intro">
+   <h2 class="action-card__title" id="ac-titre">Supprimer Atelier Aube</h2><p class="action-card__lead">…</p></div><span class="badge badge--ambre">…À confirmer</span></header>
+   <div class="action-card__lists"><section class="action-card__list"><h3 class="action-card__label">Sera effacé</h3><ul><li>Fiche et contacts</li></ul></section>
+   <section class="action-card__list"><h3 class="action-card__label">Sera gardé</h3><ul><li>Factures<span class="action-card__why">10 ans, obligation comptable</span></li></ul></section></div>
+   <fieldset class="action-card__mode"><legend class="action-card__label">Mode</legend><div class="check">…radio .check__box…</div></fieldset>
+   <p class="action-card__due">Expire le <time class="num" datetime="…">25/10/2026 à 18:40</time></p>
+   <div class="action-card__actions"><button class="btn btn--light">Confirmer</button><button class="btn btn--quiet">Annuler</button></div></form>
+   États : proposée (sans modificateur) · --facteur · --confirmee · --annulee · --expiree, chacun avec son badge et son mot. Les trois finals : sans boutons, détail en gris. */
+.action-card { display: grid; gap: 24px; max-width: 720px; padding: 24px clamp(18px, 3vw, 28px); background: var(--panel); border-radius: var(--radius); font-size: var(--step-ui); line-height: 1.45; }
+.action-card__head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 12px 20px; }
+.action-card__intro { display: grid; gap: 6px; max-width: 60ch; min-width: 0; }
+.action-card__title { font-size: var(--step-lead); font-weight: var(--w-light); letter-spacing: -0.015em; line-height: 1.3; overflow-wrap: anywhere; }
+.action-card__lead { color: var(--muted); font-size: var(--step-small); line-height: 1.5; }
+.action-card__lists { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 20px 32px; }
+.action-card__list { display: grid; gap: 10px; align-content: start; min-width: 0; }
+.action-card__list--wide { grid-column: 1 / -1; }
+.action-card__list ul { display: grid; gap: 10px; }
+.action-card__list li { overflow-wrap: anywhere; }
+.action-card__label { font-size: var(--step-small); font-weight: var(--w-text); color: var(--muted); line-height: 1.35; }
+.action-card__why { display: block; margin-top: 2px; color: var(--muted); font-size: var(--step-small); line-height: 1.45; }
+.action-card__mode { margin: 0; padding: 0; border: 0; min-width: 0; }
+.action-card__mode > legend { padding: 0; margin-bottom: 4px; }
+.action-card__due { color: var(--muted); font-size: var(--step-small); }
+.action-card__due time { color: var(--ink); }
+.action-card__actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.action-card:is(.action-card--confirmee, .action-card--annulee, .action-card--expiree) :is(.action-card__lists, .action-card__mode) { color: var(--muted); }
+@media (max-width: 479px) {
+  .action-card__actions .btn { flex: 1 1 100%; }
+}
+
+/* ---------- Modale de confirmation ---------- */
+/* <dialog class="modal" aria-labelledby="m-titre"><form class="modal__inner" method="post"><h2 class="modal__title" id="m-titre">Rejeter cette demande ?</h2>
+   <p class="modal__text">Elle quitte la liste. Le mail reste dans la boîte.</p><div class="modal__actions"><button class="btn btn--light" type="submit">Rejeter</button>
+   <button class="btn btn--quiet" type="submit" formmethod="dialog" formnovalidate>Annuler</button></div><p class="modal__status" role="status"></p></form></dialog>
+   Ouverte : dialog.showModal(), ou l'attribut open posé par le serveur · en cours : aria-busy="true" et une phrase dans .modal__status · fermée : sans open. */
+.modal {
+  position: fixed; inset: 0; z-index: 60; margin: auto; padding: 0; border: 0; border-radius: var(--radius);
+  width: min(var(--modal-width), 100% - 2 * var(--gutter)); height: fit-content; max-width: none; max-height: calc(100% - 2 * var(--gutter));
+  overflow-y: auto; overscroll-behavior: contain; background: var(--surface); color: var(--ink);
+}
+.modal::backdrop { background: var(--scrim); }
+/* Ouverte par l'attribut open (rendu serveur, avant tout script) : pas de ::backdrop, ce voile tient sa place. */
+.modal[open]:not(:modal) { box-shadow: 0 0 0 100vmax var(--scrim); }
+.modal[open] { animation: modal-in var(--dur-panel) var(--ease); }
+@keyframes modal-in { from { transform: translateY(12px); opacity: 0; } to { transform: none; opacity: 1; } }
+.modal__inner { display: grid; gap: 16px; padding: 28px clamp(20px, 4vw, 32px) 24px; }
+.modal__title { font-size: var(--step-lead); font-weight: var(--w-light); letter-spacing: -0.015em; line-height: 1.3; }
+.modal__text { color: var(--muted); font-size: var(--step-ui); line-height: 1.5; }
+.modal__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
+.modal__status { color: var(--muted); font-size: var(--step-small); }
+/* Vide, le message d'état sort de la mise en page mais reste dans l'arbre : il sera lu dès qu'il se remplit. */
+.modal__status:empty { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.modal[aria-busy="true"] { cursor: progress; }
+.modal[aria-busy="true"] .modal__actions .btn { opacity: 0.55; pointer-events: none; }
+@media (max-width: 479px) {
+  .modal__actions .btn { flex: 1 1 100%; }
+}
+
+/* ---------- Navigation mobile (sous 1 024 px) ---------- */
+/* <div class="mobile-nav"><header class="mobile-nav__bar"><a class="mobile-nav__brand" href="/" aria-label="Compta, accueil">…monogramme…
+   <span class="mobile-nav__name" aria-hidden="true">Compta</span></a><div class="mobile-nav__actions"><span class="mobile-nav__meta num">2026</span>
+   <button class="mobile-nav__toggle" type="button" aria-expanded="false" aria-controls="menu" aria-label="Ouvrir le menu">
+   <svg class="mobile-nav__icon-open">…menu…</svg><svg class="mobile-nav__icon-close">…fermer…</svg></button></div></header>
+   <div class="mobile-nav__menu" id="menu"><nav class="nav" aria-label="Navigation principale">…<a href="/" aria-current="page">Accueil</a>…</nav>
+   <div class="mobile-nav__foot">…</div></div></div>
+   Enfant direct de <body>. Ouvert : aria-expanded="true" sur le bouton (le site le bascule, avec le libellé « Fermer le menu ») · page active : aria-current="page". */
+.mobile-nav { display: none; position: sticky; top: 0; z-index: 46; }
+@media (max-width: 1023px) {
+  .mobile-nav { display: block; }
+  body:has(> .mobile-nav .mobile-nav__toggle[aria-expanded="true"]) { overflow: hidden; }
+  .panel-group, .panel-group__title { scroll-margin-top: calc(var(--bar-height) + env(safe-area-inset-top) + 16px); }
+}
+.mobile-nav__bar {
+  position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  min-height: calc(var(--bar-height) + env(safe-area-inset-top));
+  padding: env(safe-area-inset-top) max(var(--gutter), env(safe-area-inset-right)) 0 max(var(--gutter), env(safe-area-inset-left));
+  background: var(--bar);
+}
+.mobile-nav__brand { display: inline-flex; align-items: center; gap: 10px; min-height: var(--button-height); color: var(--ink); }
+.mobile-nav__brand svg { display: block; flex: none; width: auto; height: 40px; }
+.mobile-nav__name { font-size: var(--step-body); font-weight: var(--w-text); letter-spacing: -0.01em; }
+.mobile-nav__actions { display: flex; align-items: center; gap: 12px; }
+.mobile-nav__meta { color: var(--muted); font-size: var(--step-small); }
+.mobile-nav__toggle {
+  display: grid; place-items: center; width: var(--button-height); height: var(--button-height); border-radius: var(--radius);
+  background: var(--surface-2); color: var(--ink); transition: background-color var(--dur-color);
+}
+.mobile-nav__toggle:hover { background: var(--surface-3); }
+.mobile-nav__toggle svg { width: 20px; height: 20px; }
+.mobile-nav__icon-close, .mobile-nav__toggle[aria-expanded="true"] .mobile-nav__icon-open { display: none; }
+.mobile-nav__toggle[aria-expanded="true"] .mobile-nav__icon-close { display: block; }
+/* Le menu plein écran passe sous la barre, qui garde le bouton pour le fermer. */
+.mobile-nav__menu {
+  position: fixed; inset: 0; z-index: 1; display: grid; align-content: start; gap: 40px;
+  padding: calc(var(--bar-height) + env(safe-area-inset-top) + 24px) max(var(--gutter), env(safe-area-inset-right)) calc(32px + env(safe-area-inset-bottom)) max(var(--gutter), env(safe-area-inset-left));
+  overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; background: var(--bg);
+  opacity: 0; visibility: hidden; transform: translateY(-8px);
+  transition: opacity var(--dur-menu) var(--ease), transform var(--dur-menu) var(--ease), visibility var(--dur-menu);
+}
+.mobile-nav__menu::-webkit-scrollbar { display: none; }
+.mobile-nav:has(.mobile-nav__toggle[aria-expanded="true"]) .mobile-nav__menu { opacity: 1; visibility: visible; transform: none; }
+.mobile-nav__menu .nav { margin-top: 0; gap: 20px; }
+.mobile-nav__menu .nav a { font-size: var(--step-lead); padding: 9px 0; } /* 44 px de haut : une cible pour le pouce */
+.mobile-nav__menu .nav a[aria-current="page"]::before { width: 14px; }
+.mobile-nav__foot { display: grid; gap: 24px; justify-items: start; }
+
+/* Mouvement réduit : la modale et le menu apparaissent sans glisser (base.css coupe aussi toutes les durées). */
+@media (prefers-reduced-motion: reduce) {
+  .modal[open] { animation: none; }
+  .mobile-nav__menu { transform: none; transition: none; }
+}

@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="../css/index.css">
 <style>
   :root { --font: "Geist Variable", "Geist", system-ui, sans-serif; }
-  main { max-width: 1240px; margin: 0 auto; padding: var(--space-80) var(--gutter) var(--space-120); display: grid; gap: var(--space-80); }
+  main { max-width: 1240px; margin: 0 auto; padding: var(--space-80) var(--gutter) var(--space-120); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-80); }
   section { display: grid; gap: var(--space-32); }
   .rangee { display: flex; flex-wrap: wrap; gap: var(--space-16); align-items: center; }
   .grille-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-24); }
@@ -26,6 +26,20 @@
   .vignette { width: 100%; height: 100%; background: radial-gradient(circle at 30% 25%, rgb(var(--key) / 0.28), transparent 60%), radial-gradient(circle at 85% 90%, rgb(var(--rim) / 0.22), transparent 55%), var(--surface); }
   .en-tete { display: flex; align-items: center; gap: var(--space-24); }
   .en-tete img { width: 72px; height: 72px; }
+  .pile { display: grid; gap: var(--space-16); align-content: start; }
+  .pile-large { display: grid; gap: var(--space-48); }
+  .grille-cartes { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: var(--space-24); align-items: start; }
+  @media (max-width: 1023px) { .grille-cartes { grid-template-columns: minmax(0, 1fr); } }
+  /* Cadres : une page miniature. Le transform en fait le repère des éléments fixes (modale ouverte, menu du téléphone). */
+  .cadre, .telephone { outline: 1px solid var(--line); } /* démo seulement : le bord de l'écran simulé */
+  .cadre { position: relative; overflow: hidden; transform: translateZ(0); min-height: 340px; padding: var(--space-24); border-radius: var(--radius); background: var(--bg); }
+  .telephones { display: flex; flex-wrap: wrap; gap: var(--space-24); }
+  .telephone {
+    position: relative; overflow: hidden; transform: translateZ(0); width: 360px; max-width: 100%; height: 700px; border-radius: var(--radius); background: var(--bg);
+    --gutter: 16px; --step-small: 0.8125rem; --step-body: 1.0625rem; --step-lead: 1.25rem; --step-title: 1.75rem; /* tailles d'un écran de 360 px */
+  }
+  .telephone .mobile-nav { display: block; } /* la barre ne s'affiche que sous 1 024 px : ici, toujours */
+  .telephone__page { display: grid; gap: var(--space-24); padding: var(--space-24) var(--gutter); }
 </style>
 </head>
 <body>
@@ -167,6 +181,269 @@
     </div>
   </section>
 
+  <section data-contexte="outil">
+    <h2 class="t-titre">Outil · panneau et liste des demandes</h2>
+    <div class="grille-2">
+      <section class="panel-group" aria-labelledby="demo-fiche">
+        <div class="panel-group__head"><h3 class="panel-group__title" id="demo-fiche">Fiche</h3><p class="panel-group__aside">Mise à jour le <time class="num" datetime="2026-10-24">24/10/2026</time></p></div>
+        <div class="panel panel--pad"><p class="t-interface">Studio de design, packshots de flacons. Préfère les rendus sur fond sombre.</p></div>
+      </section>
+      <section class="panel-group" aria-labelledby="demo-notes">
+        <div class="panel-group__head"><h3 class="panel-group__title" id="demo-notes">Notes<sup class="num" aria-hidden="true">0</sup><span class="visually-hidden">, 0 note</span></h3></div>
+        <div class="panel"><div class="panel__empty"><p class="panel__empty-title">Rien pour l’instant</p><p class="panel__empty-text">Les notes ajoutées ici ou depuis Claude arrivent dans ce bloc.</p></div></div>
+      </section>
+    </div>
+    <div class="pile-large">
+      <section class="panel-group" aria-labelledby="demo-a-traiter">
+        <div class="panel-group__head"><h3 class="panel-group__title" id="demo-a-traiter">À traiter<sup class="num" aria-hidden="true">1</sup><span class="visually-hidden">, 1 demande</span></h3><a class="panel-group__link" href="#demo-a-traiter">Toutes les demandes</a></div>
+        <div class="panel">
+          <ul class="inquiries" aria-label="À traiter">
+            <li class="inquiry">
+              <div class="inquiry__who"><span class="inquiry__name">Maison Verre</span><span class="inquiry__sub">Formulaire du site · Coffret de fêtes</span></div>
+              <dl class="inquiry__facts"><div><dt>Type</dt><dd>Packshot</dd></div><div><dt>Langue</dt><dd>Français</dd></div><div><dt>Reçue le</dt><dd><time class="num" datetime="2026-10-22">22/10/2026</time></dd></div></dl>
+              <div class="inquiry__status"><span class="badge badge--ok"><span class="badge__dot" aria-hidden="true"></span>Analysée</span></div>
+              <div class="inquiry__actions"><a class="btn btn--quiet btn--small" href="#demo-a-traiter">Ouvrir le projet</a></div>
+            </li>
+          </ul>
+        </div>
+      </section>
+      <section class="panel-group" aria-labelledby="demo-a-verifier">
+        <div class="panel-group__head"><h3 class="panel-group__title" id="demo-a-verifier">À vérifier<sup class="num" aria-hidden="true">1</sup><span class="visually-hidden">, 1 demande</span></h3></div>
+        <div class="panel">
+          <ul class="inquiries" aria-label="À vérifier">
+            <li class="inquiry">
+              <div class="inquiry__who"><span class="inquiry__name">Atelier Aube</span><span class="inquiry__sub">Mail · Flacon parfum, trois vues</span></div>
+              <dl class="inquiry__facts"><div><dt>Type</dt><dd>Packshot</dd></div><div><dt>Langue</dt><dd>Anglais</dd></div><div><dt>Reçue le</dt><dd><time class="num" datetime="2026-10-24">24/10/2026</time></dd></div></dl>
+              <div class="inquiry__status"><span class="badge badge--ambre"><span class="badge__dot" aria-hidden="true"></span>À vérifier</span></div>
+              <div class="inquiry__actions"><button class="btn btn--quiet btn--small" type="button">Analyser</button><button class="btn btn--ghost btn--small" type="button">Rejeter</button></div>
+              <div class="inquiry__attach">
+                <form action="#demo-a-verifier"><label class="field"><span class="field__label">Client</span><select class="field__control"><option>Choisis un client</option><option>Atelier Aube</option></select></label><button class="btn btn--quiet btn--small" type="button">Choisir le client<span class="visually-hidden"> (demande d’Atelier Aube)</span></button></form>
+              </div>
+              <details class="inquiry__text"><summary>Lire le texte</summary><p class="inquiry__body">Hello, we are looking for three views of a perfume bottle for our March launch. Could you send a first estimate?</p></details>
+            </li>
+          </ul>
+        </div>
+      </section>
+      <section class="panel-group" aria-labelledby="demo-a-rattacher">
+        <div class="panel-group__head"><h3 class="panel-group__title" id="demo-a-rattacher">À rattacher<sup class="num" aria-hidden="true">1</sup><span class="visually-hidden">, 1 mail</span></h3></div>
+        <div class="panel">
+          <ul class="inquiries" aria-label="À rattacher">
+            <li class="inquiry">
+              <div class="inquiry__who"><span class="inquiry__name">Studio Nord</span><span class="inquiry__sub">Mail transmis · Planning des rendus</span></div>
+              <dl class="inquiry__facts"><div><dt>Type</dt><dd>–</dd></div><div><dt>Langue</dt><dd>Français</dd></div><div><dt>Reçue le</dt><dd><time class="num" datetime="2026-10-23">23/10/2026</time></dd></div></dl>
+              <div class="inquiry__status"><span class="badge badge--neutre"><span class="badge__dot" aria-hidden="true"></span>À rattacher</span></div>
+              <div class="inquiry__actions"><button class="btn btn--ghost btn--small" type="button">Rejeter</button></div>
+              <div class="inquiry__attach">
+                <form action="#demo-a-rattacher"><label class="field"><span class="field__label">Client</span><select class="field__control"><option>Choisis un client</option></select></label><button class="btn btn--quiet btn--small" type="button">Rattacher au client</button></form>
+                <form action="#demo-a-rattacher"><label class="field"><span class="field__label">Projet</span><select class="field__control"><option>Choisis un projet</option></select></label><button class="btn btn--quiet btn--small" type="button">Rattacher au projet</button></form>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
+      <section class="panel-group" aria-labelledby="demo-echec">
+        <div class="panel-group__head"><h3 class="panel-group__title" id="demo-echec">En échec<sup class="num" aria-hidden="true">1</sup><span class="visually-hidden">, 1 demande</span></h3></div>
+        <div class="panel">
+          <ul class="inquiries" aria-label="En échec">
+            <li class="inquiry">
+              <div class="inquiry__who"><span class="inquiry__name">Lumen &amp; Co</span><span class="inquiry__sub">Mail · Brief vidéo produit</span></div>
+              <dl class="inquiry__facts"><div><dt>Type</dt><dd>Film 3D</dd></div><div><dt>Langue</dt><dd>Anglais</dd></div><div><dt>Reçue le</dt><dd><time class="num" datetime="2026-10-21">21/10/2026</time></dd></div></dl>
+              <div class="inquiry__status"><span class="badge badge--rouge"><span class="badge__dot" aria-hidden="true"></span>En échec</span></div>
+              <div class="inquiry__actions"><button class="btn btn--quiet btn--small" type="button">Relancer</button><button class="btn btn--ghost btn--small" type="button">Rejeter</button></div>
+            </li>
+          </ul>
+        </div>
+      </section>
+      <section class="panel-group" aria-labelledby="demo-ecartes">
+        <div class="panel-group__head"><h3 class="panel-group__title" id="demo-ecartes">Écartés (14 jours)<sup class="num" aria-hidden="true">1</sup><span class="visually-hidden">, 1 mail</span></h3></div>
+        <div class="panel">
+          <ul class="inquiries" aria-label="Écartés">
+            <li class="inquiry">
+              <div class="inquiry__who"><span class="inquiry__name">Lettre d’information</span><span class="inquiry__sub">Mail · Les nouveautés d’octobre</span></div>
+              <dl class="inquiry__facts"><div><dt>Type</dt><dd>–</dd></div><div><dt>Langue</dt><dd>Français</dd></div><div><dt>Reçue le</dt><dd><time class="num" datetime="2026-10-20">20/10/2026</time></dd></div></dl>
+              <div class="inquiry__status"><span class="badge badge--muet"><span class="badge__dot" aria-hidden="true"></span>Écartée</span></div>
+              <div class="inquiry__actions"><button class="btn btn--quiet btn--small" type="button">Repêcher</button></div>
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <section data-contexte="outil">
+    <h2 class="t-titre">Outil · carte d’action à confirmer</h2>
+    <div class="grille-cartes">
+      <form class="action-card" action="#" aria-labelledby="carte-proposee">
+        <header class="action-card__head">
+          <div class="action-card__intro">
+            <h3 class="action-card__title" id="carte-proposee">Supprimer Atelier Aube</h3>
+            <p class="action-card__lead">Le client et tout ce qui le concerne quittent le hub. Les pièces comptables restent.</p>
+          </div>
+          <span class="badge badge--ambre"><span class="badge__dot" aria-hidden="true"></span>À confirmer</span>
+        </header>
+        <div class="action-card__lists">
+          <section class="action-card__list">
+            <h4 class="action-card__label">Sera effacé</h4>
+            <ul><li>Les <span class="num">3</span> contacts et les <span class="num">12</span> notes</li><li>Les <span class="num">2</span> demandes et leurs analyses</li></ul>
+          </section>
+          <section class="action-card__list">
+            <h4 class="action-card__label">Sera gardé</h4>
+            <ul><li>Les recettes et les documents comptables<span class="action-card__why">Obligation comptable : le nom, l’adresse et le SIREN restent sur les factures.</span></li></ul>
+          </section>
+          <section class="action-card__list action-card__list--wide">
+            <h4 class="action-card__label">Reste hors de portée</h4>
+            <ul>
+              <li>Le projet Claude « Atelier Aube · Flacon »<span class="action-card__why">À supprimer à la main dans l’appli Claude, avec ses discussions.</span></li>
+              <li>Les sauvegardes<span class="action-card__why">Jusqu’à leur remplacement.</span></li>
+              <li>Les données de l’API chez Anthropic<span class="action-card__why">Selon leur durée de conservation.</span></li>
+              <li>Les mails d’origine<span class="action-card__why">Dans la boîte OVH.</span></li>
+            </ul>
+          </section>
+        </div>
+        <fieldset class="action-card__mode">
+          <legend class="action-card__label">Mode</legend>
+          <div class="check"><label class="check__label"><input class="check__box" type="radio" name="mode-demo" value="effacer" checked> Effacer</label><span class="field__hint">La fiche et ses projets disparaissent.</span></div>
+          <div class="check"><label class="check__label"><input class="check__box" type="radio" name="mode-demo" value="anonymiser"> Anonymiser</label><span class="field__hint">La fiche devient « Client anonymisé n° 12 » ; les projets gardent leur type, leurs dates et leurs prix.</span></div>
+        </fieldset>
+        <p class="action-card__due">Expire le <time class="num" datetime="2026-10-25T18:40">25/10/2026 à 18:40</time></p>
+        <div class="action-card__actions"><button class="btn btn--light" type="button">Confirmer</button><button class="btn btn--quiet" type="button">Annuler</button></div>
+      </form>
+      <div class="pile">
+        <div class="action-card action-card--facteur">
+          <header class="action-card__head">
+            <div class="action-card__intro"><h3 class="action-card__title">Supprimer Atelier Aube</h3></div>
+            <span class="badge badge--ambre"><span class="badge__dot" aria-hidden="true"></span>2e facteur demandé</span>
+          </header>
+          <div class="notice notice--ambre" role="status"><p class="notice__title">Ton 2e facteur date de plus de 10 minutes</p><div class="notice__body"><p>Confirme-le, puis reviens ici : ton choix est gardé.</p></div></div>
+          <div class="action-card__actions"><a class="btn btn--quiet" href="#carte-proposee">Confirmer mon identité</a><button class="btn btn--ghost" type="button">Annuler</button></div>
+        </div>
+        <div class="action-card action-card--confirmee">
+          <header class="action-card__head">
+            <div class="action-card__intro"><h3 class="action-card__title">Supprimer Atelier Aube</h3><p class="action-card__lead">Fait. Pense au projet Claude, à supprimer à la main.</p></div>
+            <span class="badge badge--ok"><span class="badge__dot" aria-hidden="true"></span>Confirmée</span>
+          </header>
+          <div class="action-card__lists"><section class="action-card__list"><h4 class="action-card__label">Effacé</h4><ul><li>Les <span class="num">3</span> contacts et les <span class="num">12</span> notes</li></ul></section></div>
+          <p class="action-card__due">Confirmée le <time class="num" datetime="2026-10-24T18:52">24/10/2026 à 18:52</time></p>
+        </div>
+        <div class="action-card action-card--annulee">
+          <header class="action-card__head">
+            <div class="action-card__intro"><h3 class="action-card__title">Supprimer Studio Nord</h3><p class="action-card__lead">Rien n’a été effacé.</p></div>
+            <span class="badge badge--muet"><span class="badge__dot" aria-hidden="true"></span>Annulée</span>
+          </header>
+          <p class="action-card__due">Annulée le <time class="num" datetime="2026-10-23T09:12">23/10/2026 à 09:12</time></p>
+        </div>
+        <div class="action-card action-card--expiree">
+          <header class="action-card__head">
+            <div class="action-card__intro"><h3 class="action-card__title">Supprimer Lumen &amp; Co</h3><p class="action-card__lead">Rien n’a été effacé. Relance la suppression depuis la fiche du client.</p></div>
+            <span class="badge badge--muet"><span class="badge__dot" aria-hidden="true"></span>Expirée</span>
+          </header>
+          <p class="action-card__due">Expirée le <time class="num" datetime="2026-10-22T14:05">22/10/2026 à 14:05</time></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section data-contexte="outil">
+    <h2 class="t-titre">Outil · modale de confirmation</h2>
+    <div class="grille-2">
+      <div class="pile">
+        <span class="t-petit t-muted">Ouverte</span>
+        <div class="cadre">
+          <dialog class="modal" open aria-labelledby="modale-ouverte">
+            <form class="modal__inner" action="#">
+              <h3 class="modal__title" id="modale-ouverte">Rejeter cette demande ?</h3>
+              <p class="modal__text">Elle quitte la liste. Le mail reste dans la boîte OVH.</p>
+              <div class="modal__actions"><button class="btn btn--light" type="button">Rejeter</button><button class="btn btn--quiet" type="button">Annuler</button></div>
+              <p class="modal__status" role="status"></p>
+            </form>
+          </dialog>
+        </div>
+      </div>
+      <div class="pile">
+        <span class="t-petit t-muted">En cours</span>
+        <div class="cadre">
+          <dialog class="modal" open aria-busy="true" aria-labelledby="modale-en-cours">
+            <form class="modal__inner" action="#">
+              <h3 class="modal__title" id="modale-en-cours">Rejeter cette demande ?</h3>
+              <p class="modal__text">Elle quitte la liste. Le mail reste dans la boîte OVH.</p>
+              <div class="modal__actions"><button class="btn btn--light" type="button">Rejeter</button><button class="btn btn--quiet" type="button">Annuler</button></div>
+              <p class="modal__status" role="status">Rejet en cours…</p>
+            </form>
+          </dialog>
+        </div>
+      </div>
+    </div>
+    <div class="rangee"><button class="btn btn--quiet" type="button" onclick="document.getElementById('modale').showModal()">Ouvrir la modale</button><p class="t-petit t-muted">Fermée : sans l’attribut open. Démo seulement : le site ouvre la modale avec son propre script.</p></div>
+  </section>
+
+  <section>
+    <h2 class="t-titre">Navigation mobile</h2>
+    <div class="telephones">
+      <div class="pile">
+        <span class="t-petit t-muted">Fermé</span>
+        <div class="telephone" data-contexte="outil">
+          <div class="mobile-nav">
+            <header class="mobile-nav__bar">
+              <a class="mobile-nav__brand" href="#" aria-label="Compta, accueil">
+                <svg viewBox="0 0 96 166" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M80.4349 0H15.5651C6.96709 0 0 6.90215 0 15.42V150.58C0 159.098 6.96709 166 15.5651 166H80.4349C89.0329 166 96 159.098 96 150.58V15.42C96 6.90215 89.0329 0 80.4349 0ZM75.4912 42.1501C75.4912 66.2142 55.7978 85.724 31.5073 85.724C43.6526 85.724 53.4993 95.4789 53.4993 107.511V126.258C53.4993 127.94 52.1232 129.303 50.426 129.303H23.2253C21.7269 129.303 20.5088 128.096 20.5088 126.612V42.1501C20.5088 39.1408 22.9705 36.7021 26.0081 36.7021H69.9919C73.0295 36.7021 75.4912 39.1408 75.4912 42.1501Z" fill="currentColor"/></svg>
+                <span class="mobile-nav__name" aria-hidden="true">Compta</span>
+              </a>
+              <div class="mobile-nav__actions">
+                <span class="mobile-nav__meta num"><span class="visually-hidden">Exercice </span>2026</span>
+                <button class="mobile-nav__toggle" type="button" aria-expanded="false" aria-controls="menu-ferme" aria-label="Ouvrir le menu">
+                  <svg class="mobile-nav__icon-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M4 8h16M4 16h16"/></svg>
+                  <svg class="mobile-nav__icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19"/></svg>
+                </button>
+              </div>
+            </header>
+            <div class="mobile-nav__menu" id="menu-ferme">
+              <nav class="nav" aria-label="Navigation principale (fermée)"><ul class="nav__group"><li><a href="#">Accueil</a></li><li><a href="#" aria-current="page">Demandes</a></li></ul></nav>
+            </div>
+          </div>
+          <div class="telephone__page">
+            <h3 class="t-titre">Demandes</h3>
+            <section class="panel-group" aria-labelledby="tel-a-verifier">
+              <div class="panel-group__head"><h4 class="panel-group__title" id="tel-a-verifier">À vérifier<sup class="num" aria-hidden="true">1</sup><span class="visually-hidden">, 1 demande</span></h4></div>
+              <div class="panel panel--pad"><p class="t-interface">Atelier Aube · Packshot · <time class="num" datetime="2026-10-24">24/10/2026</time></p></div>
+            </section>
+            <section class="panel-group" aria-labelledby="tel-echec">
+              <div class="panel-group__head"><h4 class="panel-group__title" id="tel-echec">En échec</h4></div>
+              <div class="panel"><div class="panel__empty"><p class="panel__empty-title">Rien pour l’instant</p></div></div>
+            </section>
+          </div>
+        </div>
+      </div>
+      <div class="pile">
+        <span class="t-petit t-muted">Ouvert · page active</span>
+        <div class="telephone" data-contexte="outil">
+          <div class="mobile-nav">
+            <header class="mobile-nav__bar">
+              <a class="mobile-nav__brand" href="#" aria-label="Compta, accueil">
+                <svg viewBox="0 0 96 166" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M80.4349 0H15.5651C6.96709 0 0 6.90215 0 15.42V150.58C0 159.098 6.96709 166 15.5651 166H80.4349C89.0329 166 96 159.098 96 150.58V15.42C96 6.90215 89.0329 0 80.4349 0ZM75.4912 42.1501C75.4912 66.2142 55.7978 85.724 31.5073 85.724C43.6526 85.724 53.4993 95.4789 53.4993 107.511V126.258C53.4993 127.94 52.1232 129.303 50.426 129.303H23.2253C21.7269 129.303 20.5088 128.096 20.5088 126.612V42.1501C20.5088 39.1408 22.9705 36.7021 26.0081 36.7021H69.9919C73.0295 36.7021 75.4912 39.1408 75.4912 42.1501Z" fill="currentColor"/></svg>
+                <span class="mobile-nav__name" aria-hidden="true">Compta</span>
+              </a>
+              <div class="mobile-nav__actions">
+                <span class="mobile-nav__meta num"><span class="visually-hidden">Exercice </span>2026</span>
+                <button class="mobile-nav__toggle" type="button" aria-expanded="true" aria-controls="menu-ouvert" aria-label="Fermer le menu">
+                  <svg class="mobile-nav__icon-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M4 8h16M4 16h16"/></svg>
+                  <svg class="mobile-nav__icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19"/></svg>
+                </button>
+              </div>
+            </header>
+            <div class="mobile-nav__menu" id="menu-ouvert">
+              <nav class="nav" aria-label="Navigation principale (ouverte)">
+                <ul class="nav__group"><li><a href="#">Accueil</a></li><li><a href="#">Tableau de bord</a></li><li><a href="#">Recettes</a></li><li><a href="#">Dépenses</a></li><li><a href="#">URSSAF</a></li></ul>
+                <ul class="nav__group"><li><a href="#">Clients</a></li><li><a href="#">Projets</a></li><li><a href="#" aria-current="page">Demandes</a></li></ul>
+                <ul class="nav__group"><li><a href="#">Paramètres</a></li></ul>
+              </nav>
+              <div class="mobile-nav__foot"><button class="btn btn--quiet" type="button">Se déconnecter</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="papier bloc" style="padding: var(--space-48)">
     <h2 class="t-titre">Papier</h2>
     <p class="t-corps">Le contexte .papier passe la page en clair pour les devis et factures.</p>
@@ -184,6 +461,15 @@
     <label class="field"><span class="field__label">Adresse e-mail</span><input class="field__control" type="email"></label>
     <button class="btn btn--light btn--block" type="button">Envoyer</button>
   </div>
+</dialog>
+
+<dialog class="modal" id="modale" aria-labelledby="modale-titre">
+  <form class="modal__inner" method="dialog">
+    <h2 class="modal__title" id="modale-titre">Rejeter cette demande ?</h2>
+    <p class="modal__text">Elle quitte la liste. Le mail reste dans la boîte OVH.</p>
+    <div class="modal__actions"><button class="btn btn--light" type="submit" value="rejeter">Rejeter</button><button class="btn btn--quiet" type="submit" value="annuler">Annuler</button></div>
+    <p class="modal__status" role="status"></p>
+  </form>
 </dialog>
 </body>
 </html>
