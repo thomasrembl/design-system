@@ -29,7 +29,7 @@ Couleurs : `--bg --surface --surface-2 --surface-3 --ink --muted --accent --acce
 Erreur en deux tons (Figma) : contour d'un champ et filet de notice en `--red`, texte du message en `--error`.
 Typo : `--font --w-light --w-text --w-strong --step-small --step-ui --step-body --step-lead --step-kpi --step-title --step-head`.
 Espaces : `--space-4 … --space-120` (4, 8, 12, 16, 24, 32, 48, 64, 80, 120), `--gutter` (16 → 32 px), `--gap` 10 px.
-Formes : `--radius` 6 px, `--radius-pill`, `--shadow-panel` (seule ombre). Tailles : `--sidebar --sidebar-tool --column --legal --page --panel-width --button-height --button-height-sm --field-height`.
+Formes : `--radius` 6 px, `--radius-pill`, `--shadow-panel` (seule ombre). Tailles : `--sidebar --sidebar-tool --column --legal --page --panel-width --modal-width --bar-height --button-height --button-height-sm --field-height`.
 Mouvement : `--ease` `cubic-bezier(0.22, 1, 0.36, 1)`, `--dur-color` 200 ms, `--dur-button` 250 ms, `--dur-menu` 350 ms, `--dur-panel` 500 ms, `--dur-reveal` 900 ms, `--dur-zoom` 1 200 ms.
 Un token manque ? L'ajouter dans `tokens/tokens.json` du dépôt `thomasrembl/design-system` (puis `npm run tokens:build`), jamais en dur dans un site.
 
@@ -66,11 +66,58 @@ Un token manque ? L'ajouter dans `tokens/tokens.json` du dépôt `thomasrembl/de
 <dialog class="drawer"><div class="drawer__inner"><div class="drawer__head"><h2 class="drawer__title">Un produit à montrer ?</h2>
   <button class="drawer__close" aria-label="Fermer"><svg>…</svg></button></div>…</div></dialog>
 ```
+
+### Composants du hub (outil, v0.2.0)
+HTML et CSS seulement, compatibles avec une CSP stricte (ni script, ni style en ligne) : le site code le comportement, les états passent par une classe ou un attribut. Référence complète, états et HTML minimal : `docs/composants-v0.2.md` dans le dépôt GitHub.
+```html
+<!-- Panneau générique : titre au-dessus, surface --panel sans bordure ; vide = « Rien pour l’instant » -->
+<section class="panel-group" aria-labelledby="notes"><div class="panel-group__head">
+  <h2 class="panel-group__title" id="notes">Notes<sup class="num" aria-hidden="true">3</sup><span class="visually-hidden">, 3 notes</span></h2>
+  <a class="panel-group__link" href="…">Tout voir</a></div>
+  <div class="panel panel--pad">…</div></section>
+<div class="panel"><div class="panel__empty"><p class="panel__empty-title">Rien pour l’instant</p></div></div>
+
+<!-- Liste des demandes : un .panel-group par groupe (À traiter, À vérifier, À rattacher, En échec, Écartés) -->
+<ul class="inquiries" aria-label="À vérifier"><li class="inquiry">
+  <div class="inquiry__who"><span class="inquiry__name">Atelier Aube</span><span class="inquiry__sub">Mail · Flacon parfum</span></div>
+  <dl class="inquiry__facts"><div><dt>Type</dt><dd>Packshot</dd></div><div><dt>Langue</dt><dd>Anglais</dd></div>
+    <div><dt>Reçue le</dt><dd><time class="num" datetime="2026-10-24">24/10/2026</time></dd></div></dl>
+  <div class="inquiry__status"><span class="badge badge--ambre"><span class="badge__dot" aria-hidden="true"></span>À vérifier</span></div>
+  <div class="inquiry__actions"><button class="btn btn--quiet btn--small">Analyser</button></div></li></ul>
+<!-- statuts : analysée --ok · à vérifier --ambre · en échec --rouge · à rattacher --neutre · écartée --muet -->
+
+<!-- Carte d'action à confirmer (supprimer un client) : effacé, gardé et pourquoi, mode, échéance -->
+<form class="action-card" method="post" aria-labelledby="t"><header class="action-card__head"><div class="action-card__intro">
+  <h2 class="action-card__title" id="t">Supprimer Atelier Aube</h2><p class="action-card__lead">…</p></div>
+  <span class="badge badge--ambre"><span class="badge__dot" aria-hidden="true"></span>À confirmer</span></header>
+  <div class="action-card__lists"><section class="action-card__list"><h3 class="action-card__label">Sera gardé</h3>
+    <ul><li>Les factures<span class="action-card__why">Obligation comptable.</span></li></ul></section></div>
+  <fieldset class="action-card__mode"><legend class="action-card__label">Mode</legend><div class="check">…radio .check__box…</div></fieldset>
+  <p class="action-card__due">Expire le <time class="num" datetime="…">25/10/2026 à 18:40</time></p>
+  <div class="action-card__actions"><button class="btn btn--light">Confirmer</button><button class="btn btn--quiet">Annuler</button></div></form>
+<!-- états : proposée · --facteur · --confirmee · --annulee · --expiree, chacun avec son badge et son mot -->
+
+<!-- Modale de confirmation : ouverte = open (showModal ou serveur) · en cours = aria-busy="true" · fermée = sans open -->
+<dialog class="modal" aria-labelledby="m"><form class="modal__inner" method="post"><h2 class="modal__title" id="m">Rejeter cette demande ?</h2>
+  <p class="modal__text">…</p><div class="modal__actions"><button class="btn btn--light">Rejeter</button>
+  <button class="btn btn--quiet" formmethod="dialog" formnovalidate>Annuler</button></div><p class="modal__status" role="status"></p></form></dialog>
+
+<!-- Navigation mobile (sous 1 024 px), enfant direct de <body> : ouvert = aria-expanded="true" sur le bouton ; page active = aria-current -->
+<div class="mobile-nav"><header class="mobile-nav__bar"><a class="mobile-nav__brand" href="/">…monogramme…<span class="mobile-nav__name">Compta</span></a>
+  <div class="mobile-nav__actions"><button class="mobile-nav__toggle" aria-expanded="false" aria-controls="menu" aria-label="Ouvrir le menu">
+  <svg class="mobile-nav__icon-open">…</svg><svg class="mobile-nav__icon-close">…</svg></button></div></header>
+  <div class="mobile-nav__menu" id="menu"><nav class="nav" aria-label="Navigation principale">…</nav><div class="mobile-nav__foot">…</div></div></div>
+```
+- La carte et la modale portent la seule `.btn--light` de l'écran : la page qui les montre n'en affiche pas d'autre.
+- La carte est un `<form method="post">` : c'est le serveur qui exécute l'action, avec le 2e facteur ; une carte non confirmée expire (24 heures pour la suppression d'un client). États finaux : sans boutons, détail en gris.
+- La modale sert aux confirmations simples ; ouverte sans script (attribut `open` posé par le serveur), un voile `--scrim` remplace `::backdrop`.
+- Le site garde le comportement du menu : basculer `aria-expanded` et le libellé (« Ouvrir le menu » / « Fermer le menu »), rendre `<main>` inerte, fermer avec Échap. La page ne défile plus tant que le menu est ouvert (CSS).
+- Tokens ajoutés : `--modal-width` (480 px), `--bar-height` (68 px, barre du téléphone sans l'encoche).
 Styles de texte : `.t-display .t-titre .t-accroche .t-corps .t-interface .t-bouton .t-petit .t-chiffre .t-muted`. Utilitaires : `.num`, `.visually-hidden`, `.skip`, `.no-scrollbar`, `.colonne`.
 Rendu de référence : `demo/index.html` dans le dépôt GitHub.
 
 ## Mise en page
-- Sidebar fixe (`.sidebar`, largeur `var(--sidebar)`), contenu décalé d'autant, marge `var(--gutter)` ; sous 1 023 px la sidebar devient un menu.
+- Sidebar fixe (`.sidebar`, largeur `var(--sidebar)`), contenu décalé d'autant, marge `var(--gutter)` ; sous 1 024 px le site masque sa sidebar et la navigation mobile (`.mobile-nav`) prend le relais.
 - Grille vitrine `.grid` : 3 colonnes ≥ 1 280 px, 2 de 640 à 1 279 px, 1 en dessous ; écart 28 px × 10 px.
 - Points de rupture : 639 · 1 023 · 1 279 px (+ 479 px pour l'outil). Texte : 560 px max ; pages légales 680 px ; page outil 1 240 px.
 - Rayon 6 px partout, pilule pour les badges, cercle pour les boutons ronds. Aucune bordure décorative.

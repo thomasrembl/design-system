@@ -26,6 +26,12 @@ test('le manifeste du plugin est complet et cohérent avec la marketplace', asyn
   assert.equal(m.plugins.find(x => x.name === 'marque').version, pl.version);
 });
 
+test('le paquet et le plugin portent le même numéro de version', async () => {
+  const pkg = JSON.parse(await lire('package.json'));
+  const pl = JSON.parse(await lire('plugins/marque/.claude-plugin/plugin.json'));
+  assert.equal(pkg.version, pl.version);
+});
+
 test('le skill a son nom, une description et ses références', async () => {
   const md = await lire(SKILL + 'SKILL.md');
   const entete = md.match(/^---\n([\s\S]*?)\n---\n/);

@@ -18,7 +18,7 @@ npm i github:thomasrembl/design-system
 | `css/tokens.css` | Toutes les variables (`--bg`, `--ink`, `--muted`, `--accent`, `--space-24`, `--ease`…). Généré, ne pas modifier. |
 | `css/base.css` | Reset, typo, focus, contextes `data-contexte="outil"` et `.papier`, styles de texte `.t-*`, mouvement réduit. |
 | `css/studio.css` | Fond studio : halos de lumière key / rim et grain. |
-| `css/components.css` | Bouton, champ, case à cocher, carte projet, grille, badge, notice, KPI, jauge, sidebar et navigation, tableau, tiroir. |
+| `css/components.css` | Bouton, champ, case à cocher, carte projet, grille, badge, notice, KPI, jauge, sidebar et navigation, tableau, tiroir ; pour le hub (v0.2.0) : panneau, liste des demandes, carte d'action à confirmer, modale de confirmation, navigation mobile ([`docs/composants-v0.2.md`](docs/composants-v0.2.md)). |
 | `tokens/tokens.json` | Source des tokens (format W3C Design Tokens). |
 | `assets/` | Logos, 11 icônes, favicons, signature e-mail. |
 

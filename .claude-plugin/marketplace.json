@@ -11,7 +11,7 @@
     {
       "name": "marque",
       "description": "Marque Thomas Remblier : plateforme, charte, règles web et design system pour créer sites, pages, composants et visuels.",
-      "version": "0.1.2",
+      "version": "0.2.0",
       "author": {
         "name": "Thomas Remblier",
         "email": "contact@thomasremblier.fr"
