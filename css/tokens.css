@@ -83,6 +83,8 @@
   --legal: 680px; /* Pages légales */
   --page: 1240px; /* Page outil */
   --panel-width: 540px; /* Panneau latéral */
+  --modal-width: 480px; /* Modale de confirmation */
+  --bar-height: 68px; /* Barre du haut du téléphone, sans l'encoche */
   --button-height: 44px; /* Bouton (cible tactile minimale) */
   --button-height-sm: 36px; /* Petit bouton */
   --field-height: 48px; /* Champ */
