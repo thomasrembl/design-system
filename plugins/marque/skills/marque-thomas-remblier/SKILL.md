@@ -5,7 +5,7 @@ description: Marque et design system de Thomas Remblier, artiste CGI produit. À
 
 # Marque Thomas Remblier
 
-Thomas Remblier est artiste CGI produit, freelance : packshots, films 3D, web interactif (React Three Fiber) et outils Houdini (HDA). Promesse : **« L'image avant le produit. »** Cibles : marques, agences, studios de design, e-commerce.
+Thomas Remblier est artiste CGI produit, freelance : packshots, vidéos 3D, web interactif (React Three Fiber) et outils Houdini (HDA). Promesse : **« L'image avant le produit. »** Cibles : marques, agences, studios de design, e-commerce.
 
 La marque est **monochrome** (noir studio, encre, gris, blanc cassé). Sa seule couleur est la **lumière studio** : une principale chaude (key `#FFE2BE`) et un contour froid (rim `#C4D6FF`), jamais en aplat sur un composant. Police unique **Geist**, graisses 300 / 350 / 450, jamais au-dessus.
 
