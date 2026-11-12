@@ -30,6 +30,7 @@
   --chart-chaud: #ffe2be; /* Série principale des graphiques */
   --chart-froid: #9fb6e6; /* Série secondaire des graphiques */
   --chart-neutre: #8f8c87; /* Série neutre des graphiques */
+  --chart-mauve: #c7a8e6; /* Série d'appoint des graphiques et des calques (publications) */
 
   /* Couleurs · états (outil uniquement, toujours accompagnés d'un mot) */
   --amber: #d9a441; /* À surveiller, en attente */
