@@ -1,6 +1,6 @@
 # Design system — Thomas Remblier
 
-Tokens, CSS, composants, assets et plugin Claude Code de la marque **Thomas Remblier**, artiste CGI produit (packshots, films 3D, web interactif, outils Houdini). Direction « studio » : monochrome, une seule couleur — la lumière d'un plateau 3D — et la police Geist en graisses fines.
+Tokens, CSS, composants, assets et plugin Claude Code de la marque **Thomas Remblier**, artiste CGI produit (packshots, vidéos 3D, web interactif, outils Houdini). Direction « studio » : monochrome, une seule couleur — la lumière d'un plateau 3D — et la police Geist en graisses fines.
 
 - Figma (charte, bibliothèque, assets) : https://www.figma.com/design/NX4WhM0e2jx6oObUMxQ5x0/Claude
 - Démo de tous les composants : [`demo/index.html`](demo/index.html)

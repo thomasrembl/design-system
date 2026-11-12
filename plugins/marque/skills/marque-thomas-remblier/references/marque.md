@@ -9,12 +9,12 @@
 ## Raison d'être, vision, mission
 - **Raison d'être** : un produit existe d'abord en image. Thomas fabrique cette image : celle qui le fait comprendre, désirer et vendre avant qu'il sorte d'usine.
 - **Vision** : qu'aucune marque n'ait à attendre un prototype pour montrer, tester et lancer un produit.
-- **Mission** : créer des images de synthèse de produits — packshots, films et expériences web — à partir des fichiers 3D, des plans ou des croquis des clients, avec la précision d'un studio photo et la souplesse du numérique.
+- **Mission** : créer des images de synthèse de produits — packshots, vidéos et expériences web — à partir des fichiers 3D, des plans ou des croquis des clients, avec la précision d'un studio photo et la souplesse du numérique.
 
 ## Promesse : L'image avant le produit
 1. **Plus tôt** — on part des fichiers CAO ou des croquis : pas de prototype, pas de shooting.
 2. **Plus juste** — matières, lumière et proportions fidèles, validées étape par étape, de la passe clay au rendu final.
-3. **Plus loin** — une même scène 3D se décline en packshots, en film et en web interactif.
+3. **Plus loin** — une même scène 3D se décline en packshots, en vidéo et en web interactif.
 
 ## Positionnement
 Pour les marques, agences et studios qui doivent montrer un produit avant de pouvoir le photographier, Thomas Remblier est l'artiste CGI indépendant qui réunit l'exigence d'un studio photo et la souplesse de la 3D, du packshot jusqu'au navigateur. Contrairement à un grand studio, on parle directement à la personne qui fabrique l'image.
@@ -29,7 +29,7 @@ Pour les marques, agences et studios qui doivent montrer un produit avant de pou
 
 ## Offres
 - **Packshot** — image fixe, fond studio ou mise en scène ; variantes de couleur et de matière.
-- **Film 3D** — mises en mouvement, éclatés, films de lancement et formats réseaux.
+- **Vidéo produit** — mises en mouvement, éclatés, spots de lancement et formats réseaux.
 - **Web interactif** — le produit manipulable en 3D dans le navigateur (React Three Fiber).
 - **HDA Houdini** — outils procéduraux en trois formules : libres et gratuits (GitHub), en vente en boutique (Gumroad, ArtStation Marketplace ou Orbolt), ou sous licence studio sur devis, avec adaptation et support.
 
@@ -68,4 +68,4 @@ Quatre principes :
 
 Typographie française : espace insécable avant « : » et fine insécable avant « ; ? ! », apostrophe typographique ’, guillemets « ». Français par défaut, anglais en miroir (ArtStation, Behance, GitHub en anglais).
 
-Vocabulaire : « CGI produit », « packshot », « film 3D », « web interactif », « passe clay », « rendu final ». Éviter « VFX » (effets spéciaux de cinéma, autre métier).
+Vocabulaire : « CGI produit », « packshot », « vidéo produit », « web interactif », « passe clay », « rendu final ». Jamais « film » : sur le site, « vidéo », « vidéo produit » ou « spot » ; sur les réseaux, on nomme la pièce (spot, teaser, boucle, turntable), sans « vidéo produit ». Éviter « VFX » (effets spéciaux de cinéma, autre métier).
