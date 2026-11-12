@@ -14,7 +14,7 @@ const NOMS_DES_SITES = [
   '--font', '--w-light', '--w-text', '--w-strong', '--step-small', '--step-ui', '--step-body', '--step-lead', '--step-head',
   '--sidebar', '--gutter', '--radius', '--gap', '--column', '--ease',
   '--amber', '--red', '--ok', '--error', '--line', '--line-soft', '--field-border', '--panel',
-  '--chart-chaud', '--chart-froid', '--chart-neutre', '--page',
+  '--chart-chaud', '--chart-froid', '--chart-neutre', '--chart-mauve', '--page',
 ];
 
 // Couples texte / fond qui doivent tenir le niveau AA (4,5 : 1).

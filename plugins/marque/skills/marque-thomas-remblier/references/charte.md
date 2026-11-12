@@ -24,7 +24,7 @@ Neutres (≈ 98 % de la surface) :
 | `--ink` | `#EDEBE7` | Texte, titres |
 | `--accent` | `#F3F3F2` | Action principale, focus |
 
-Lumière studio (≈ 2 %, uniquement en lumière) : `--key` `#FFE2BE` (chaude) et `--rim` `#C4D6FF` (froide), en **triplets RVB** : `rgb(var(--key) / 0.13)`. Graphiques : `--chart-chaud`, `--chart-froid` `#9FB6E6`, `--chart-neutre`.
+Lumière studio (≈ 2 %, uniquement en lumière) : `--key` `#FFE2BE` (chaude) et `--rim` `#C4D6FF` (froide), en **triplets RVB** : `rgb(var(--key) / 0.13)`. Graphiques : `--chart-chaud`, `--chart-froid` `#9FB6E6`, `--chart-neutre`, `--chart-mauve` `#C7A8E6` (série d'appoint, calque des publications).
 
 États (outil seulement, toujours avec un mot) : `--amber` `#D9A441` à surveiller · `--red` `#E26D5C` en retard, contour d'un champ en erreur · `--ok` `#8FB996` fait · `--error` `#EC9A90` texte d'erreur. Une erreur s'affiche en deux tons : contour `--red`, message `--error`.
 
